@@ -1,0 +1,26 @@
+{{define "index"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/static/js/index.js" defer></script>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <title>Pantsbase 👖</title>
+</head>
+
+<body>
+    <nav>
+        <h1>Welcome to Pantsbase</h1>
+    </nav>
+
+    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+    <form action="raw_query" method="POST" target="dummyframe">
+        <input type="text" name="query" id="query-box" placeholder="write your query here">
+        <button type="submit">Run</button>
+    </form>
+</body>
+
+</html>
+{{end}}

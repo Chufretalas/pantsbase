@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"net/http"
+
+	"github.com/Chufretalas/pantsbase/db"
+	"github.com/Chufretalas/pantsbase/routes"
+)
 
 func main() {
-	fmt.Println("opaaaaaaaaaaa")
+	db.ConnectDB()
+	defer db.DB.Close()
+
+	routes.LoadRoutes()
+	http.ListenAndServe(":8000", routes.Router)
 }
