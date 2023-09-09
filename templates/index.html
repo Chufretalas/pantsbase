@@ -30,40 +30,63 @@
         <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
         <h2>New Table</h2>
         <form action="new_table" method="POST" target="dummyframe" id="nt_form">
-            <label for="new_table_name_input">Table Name</label>
-            <input type="text" name="name" id="new_table_name_input" placeholder="name your new table">
-            <div class="nt_column">
-                <div class="nt_column_name">
-                    <label for="n1" class="nt_column_name_label">Name:</label>
-                    <input type="text" name="n1" id="n1">
-                </div>
-                <div class="nt_column_type">
-                    <label for="t1" class="nt_column_type_label">Type:</label>
-                    <input type="text" name="t1" id="t1" class="nt_column_type_input">
-                </div>
+            <div class="nt_name_input_wrapper">
+                <label for="new_table_name_input">Table Name</label>
+                <input type="text" name="name" id="new_table_name_input" placeholder="name your new table">
             </div>
-            <div class="nt_column">
-                <div class="nt_column_name">
-                    <label for="n1" class="nt_column_name_label">Name:</label>
-                    <input type="text" name="n1" id="n1">
-                </div>
-                <div class="nt_column_type">
-                    <label for="t1" class="nt_column_type_label">Type:</label>
-                    <input type="text" name="t1" id="t1" class="nt_column_type_input">
-                </div>
-            </div>
-            <button id="nt_new_column_button">+ <span>new column</span></button>
+            <ol class="nt_columns"></ol>
+            <button id="nt_new_column_button">+<span>new column</span></button>
+            <input type="hidden" name="column_indexes" id="column_indexes_input">
             <button type="submit" id="new_table_button">Create</button>
         </form>
         <hr>
     </main>
 
     <script>
+        const columnIndexes = []
+        const columnIndexesInput = document.querySelector("#column_indexes_input")
         const form = document.querySelector("#nt_form")
-        form.addEventListener("submit", (event => {
-            event.preventDefault()
-            console.log(event)
+        form.addEventListener("submit", (e => {
+            e.preventDefault()
+            console.log(e)
         }))
+        const ntColumns = document.querySelector(".nt_columns")
+        const ncButton = document.querySelector("#nt_new_column_button")
+        ncButton.addEventListener("click", (e) => {
+            e.preventDefault()
+            const newIndex = columnIndexes.length === 0 ? 0 : columnIndexes[columnIndexes.length - 1] + 1
+            columnIndexes.push(newIndex)
+            columnIndexesInput.value = columnIndexes.toString()
+            const newColumnElement = document.createElement("li")
+            newColumnElement.className = "nt_column"
+            newColumnElement.innerHTML = `
+                    <span>Column: </span>
+                    <div class="nt_column_name">
+                        <label for="n${newIndex}" class="nt_column_name_label">Name:</label>
+                        <input type="text" name="n${newIndex}" id="n${newIndex}">
+                    </div>
+                    <div class="nt_column_type">
+                        <label for="t${newIndex}" class="nt_column_type_label">Type:</label>
+                        <input type="text" name="t${newIndex}" id="t${newIndex}" class="nt_column_type_input">
+                    </div>
+                    <button class="remove_new_column" id="remove_new_column_${newIndex}" value=${newIndex} type="button">X</button>
+            `
+            ntColumns.appendChild(newColumnElement)
+            document.querySelector(`#remove_new_column_${newIndex}`).addEventListener("click", removeNewColumn)
+
+        })
+        function removeNewColumn(e) {
+            e.preventDefault()
+            console.log(e.target.value)
+            for (let child of ntColumns.children) {
+                if (child.innerHTML.includes(`t${e.target.value}`)) {
+                    ntColumns.removeChild(child)
+                    columnIndexes.splice(columnIndexes.indexOf(e.target.value)-1, 1)
+                    columnIndexesInput.value = columnIndexes.toString()
+                    return
+                }
+            }
+        }
     </script>
 </body>
 

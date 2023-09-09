@@ -1,5 +1,6 @@
 :root {
     --blue-color: rgb(23, 120, 206);
+    --dark-blue-color: rgb(12, 85, 148);
 }
 
 body {
@@ -32,6 +33,16 @@ button {
     border: none;
     color: white;
     cursor: pointer;
+    transition: all 200ms;
+
+}
+
+button:hover, .your_tables_item:hover {
+    background-color: var(--dark-blue-color);
+}
+
+button:active {
+    transform: scale(1.05);
 }
 
 .your_tables_wrapper {
@@ -55,22 +66,46 @@ button {
     padding: 0.6rem;
     margin: 0.5rem;
     background-color: var(--blue-color);
+    transition: all 200ms;
 }
 
 #nt_form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.4rem;
+}
+
+.nt_name_input_wrapper {
+    background-color: rgb(51, 51, 51);
+    width: fit-content;
+    padding: 5px;
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
 }
 
 #new_table_name_input {
     width: 10rem;
-    margin: 0.2rem 0;
+    
+}
+
+.nt_columns {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.4rem;
 }
 
 .nt_column {
     display: flex;
     gap: 1rem;
-    margin: 0.3rem 0;
+    background-color: rgb(51, 51, 51);
+    width: fit-content;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.nt_column span {
+    font-weight: bold;
 }
 
 #nt_new_column_button {
@@ -80,14 +115,23 @@ button {
     font-size: 1.3rem;
     font-weight: bolder;
     border-radius: 999999px;
-    padding: 10px;
+    padding: 5px 10px;
     cursor: pointer;
-    margin-bottom: 0.5rem;
     width: fit-content;
 }
 
 #nt_new_column_button span {
     font-size: 1rem;
+}
+
+.remove_new_column {
+    background-color: red;
+    border-radius: 99999px;
+    transition: all 200ms;
+}
+
+.remove_new_column:hover {
+    background-color: rgb(218, 0, 0);
 }
 
 #new_table_button {
