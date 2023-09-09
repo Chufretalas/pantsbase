@@ -12,6 +12,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	temp.ExecuteTemplate(w, "index", nil)
 }
 
-func RawQuery(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.FormValue("query"))
+func NewTable(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.FormValue("name"))
 }

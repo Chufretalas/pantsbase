@@ -1,4 +1,99 @@
+:root {
+    --blue-color: rgb(23, 120, 206);
+}
+
 body {
     background-color: black;
     color: white;
+}
+
+nav {
+    background-color: gray;
+    padding: 0.5rem 5vw;
+}
+
+nav h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+main {
+    width: 80vw;
+    margin: 0 auto;
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+button {
+    background-color: var(--blue-color);
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.your_tables_wrapper {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    padding: 20px 0;
+    /* background-color: red; */
+}
+
+.your_tables_list {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.your_tables_item {
+    color: white;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 0.6rem;
+    margin: 0.5rem;
+    background-color: var(--blue-color);
+}
+
+#nt_form {
+    display: flex;
+    flex-direction: column;
+}
+
+#new_table_name_input {
+    width: 10rem;
+    margin: 0.2rem 0;
+}
+
+.nt_column {
+    display: flex;
+    gap: 1rem;
+    margin: 0.3rem 0;
+}
+
+#nt_new_column_button {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 1.3rem;
+    font-weight: bolder;
+    border-radius: 999999px;
+    padding: 10px;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+    width: fit-content;
+}
+
+#nt_new_column_button span {
+    font-size: 1rem;
+}
+
+#new_table_button {
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    margin: 0 auto;
+    width: fit-content;
 }

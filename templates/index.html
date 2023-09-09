@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/static/js/index.js" defer></script>
+    <link rel="stylesheet" href="/static/css/reset.css">
     <link rel="stylesheet" href="/static/css/index.css">
     <title>Pantsbase 👖</title>
 </head>
@@ -15,11 +16,55 @@
         <h1>Welcome to Pantsbase</h1>
     </nav>
 
-    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
-    <form action="raw_query" method="POST" target="dummyframe">
-        <input type="text" name="query" id="query-box" placeholder="write your query here">
-        <button type="submit">Run</button>
-    </form>
+    <main>
+
+        <section class="your_tables_wrapper">
+            <h2 class="your_tables_title">Your Tables</h2>
+            <ul class="your_tables_list">
+                <li><a href="" class="your_tables_item">todos</a></li>
+                <li><a href="" class="your_tables_item">completed</a></li>
+                <li><a href="" class="your_tables_item">deleted</a></li>
+            </ul>
+        </section>
+        <hr>
+        <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+        <h2>New Table</h2>
+        <form action="new_table" method="POST" target="dummyframe" id="nt_form">
+            <label for="new_table_name_input">Table Name</label>
+            <input type="text" name="name" id="new_table_name_input" placeholder="name your new table">
+            <div class="nt_column">
+                <div class="nt_column_name">
+                    <label for="n1" class="nt_column_name_label">Name:</label>
+                    <input type="text" name="n1" id="n1">
+                </div>
+                <div class="nt_column_type">
+                    <label for="t1" class="nt_column_type_label">Type:</label>
+                    <input type="text" name="t1" id="t1" class="nt_column_type_input">
+                </div>
+            </div>
+            <div class="nt_column">
+                <div class="nt_column_name">
+                    <label for="n1" class="nt_column_name_label">Name:</label>
+                    <input type="text" name="n1" id="n1">
+                </div>
+                <div class="nt_column_type">
+                    <label for="t1" class="nt_column_type_label">Type:</label>
+                    <input type="text" name="t1" id="t1" class="nt_column_type_input">
+                </div>
+            </div>
+            <button id="nt_new_column_button">+ <span>new column</span></button>
+            <button type="submit" id="new_table_button">Create</button>
+        </form>
+        <hr>
+    </main>
+
+    <script>
+        const form = document.querySelector("#nt_form")
+        form.addEventListener("submit", (event => {
+            event.preventDefault()
+            console.log(event)
+        }))
+    </script>
 </body>
 
 </html>
