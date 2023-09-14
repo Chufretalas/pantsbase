@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/static/js/index.js" defer></script>
     <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/global.css">
     <link rel="stylesheet" href="/static/css/index.css">
     <title>Pantsbase 👖</title>
 </head>
@@ -26,7 +27,9 @@
                 <li><a href="" class="your_tables_item">deleted</a></li>
             </ul>
         </section>
+
         <hr>
+
         <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
         <h2>New Table</h2>
         <form action="new_table" method="POST" target="dummyframe" id="nt_form">
@@ -34,11 +37,15 @@
                 <label for="new_table_name_input">Table Name</label>
                 <input type="text" name="name" id="new_table_name_input" placeholder="name your new table">
             </div>
-            <ol class="nt_columns"></ol>
+            <span>* Note that a "id INTEGER PRIMARY KEY AUTOINCREMENT" is automatically created for every table</span>
+            <ol class="nt_columns">
+                <!-- Here the column inputs will be dynamically created -->
+            </ol>
             <button id="nt_new_column_button">+<span>new column</span></button>
             <input type="hidden" name="column_indexes" id="column_indexes_input">
             <button type="submit" id="new_table_button">Create</button>
         </form>
+
         <hr>
     </main>
 
@@ -47,7 +54,6 @@
         const columnIndexesInput = document.querySelector("#column_indexes_input")
         const form = document.querySelector("#nt_form")
         form.addEventListener("submit", (e => {
-            e.preventDefault()
             console.log(e)
         }))
         const ntColumns = document.querySelector(".nt_columns")
@@ -67,7 +73,11 @@
                     </div>
                     <div class="nt_column_type">
                         <label for="t${newIndex}" class="nt_column_type_label">Type:</label>
-                        <input type="text" name="t${newIndex}" id="t${newIndex}" class="nt_column_type_input">
+                        <select name="t${newIndex}" id="t${newIndex}" class="nt_column_type_input">
+                            <option value="INTEGER">INTEGER</option>
+                            <option value="REAL">REAL</option>
+                            <option value="TEXT">TEXT</option>
+                        </select>
                     </div>
                     <button class="remove_new_column" id="remove_new_column_${newIndex}" value=${newIndex} type="button">X</button>
             `
@@ -81,7 +91,7 @@
             for (let child of ntColumns.children) {
                 if (child.innerHTML.includes(`t${e.target.value}`)) {
                     ntColumns.removeChild(child)
-                    columnIndexes.splice(columnIndexes.indexOf(e.target.value)-1, 1)
+                    columnIndexes.splice(columnIndexes.indexOf(e.target.value) - 1, 1)
                     columnIndexesInput.value = columnIndexes.toString()
                     return
                 }
