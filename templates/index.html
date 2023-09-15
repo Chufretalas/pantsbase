@@ -35,7 +35,7 @@
         <form action="new_table" method="POST" target="dummyframe" id="nt_form">
             <div class="nt_name_input_wrapper">
                 <label for="new_table_name_input">Table Name</label>
-                <input type="text" name="name" id="new_table_name_input" placeholder="name your new table">
+                <input type="text" name="name" id="new_table_name_input" placeholder="name your new table" required>
             </div>
             <span>* Note that a "id INTEGER PRIMARY KEY AUTOINCREMENT" is automatically created for every table</span>
             <ol class="nt_columns">
@@ -62,14 +62,14 @@
             e.preventDefault()
             const newIndex = columnIndexes.length === 0 ? 0 : columnIndexes[columnIndexes.length - 1] + 1
             columnIndexes.push(newIndex)
-            columnIndexesInput.value = columnIndexes.toString()
+            columnIndexesInput.value = columnIndexes.map((number) => `${number}`).join(" ")
             const newColumnElement = document.createElement("li")
             newColumnElement.className = "nt_column"
             newColumnElement.innerHTML = `
                     <span>Column: </span>
                     <div class="nt_column_name">
                         <label for="n${newIndex}" class="nt_column_name_label">Name:</label>
-                        <input type="text" name="n${newIndex}" id="n${newIndex}">
+                        <input type="text" name="n${newIndex}" id="n${newIndex}" required>
                     </div>
                     <div class="nt_column_type">
                         <label for="t${newIndex}" class="nt_column_type_label">Type:</label>
@@ -92,7 +92,7 @@
                 if (child.innerHTML.includes(`t${e.target.value}`)) {
                     ntColumns.removeChild(child)
                     columnIndexes.splice(columnIndexes.indexOf(e.target.value) - 1, 1)
-                    columnIndexesInput.value = columnIndexes.toString()
+                    columnIndexesInput.value = columnIndexes.map((number) => `${number}`).join(" ")
                     return
                 }
             }
