@@ -18,6 +18,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 func NewTable(w http.ResponseWriter, r *http.Request) {
 	tableName := r.FormValue("name")
 	columnIndexes := strings.Split(r.FormValue("column_indexes"), " ")
+	fmt.Println(columnIndexes)
 	columns := make([]m.Column, 0, len(columnIndexes))
 	for _, index := range columnIndexes {
 		name := r.FormValue(fmt.Sprintf("n%v", index))
