@@ -1,5 +1,53 @@
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600;700;800;900&display=swap');
 
+:root {
+    --blue-color: rgb(23, 120, 206);
+    --dark-blue-color: rgb(12, 85, 148);
+}
+
+body {
+    background-color: black;
+    color: white;
+}
+
+main {
+    width: 80vw;
+    margin: 0 auto;
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+button {
+    background-color: var(--blue-color);
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 200ms;
+}
+
+button:hover {
+    background-color: var(--dark-blue-color);
+}
+
+button:active {
+    transform: scale(1.05);
+}
+
 *, h1, span {
     font-family: 'Inconsolata', monospace;
+}
+
+nav {
+    background-color: gray;
+    padding: 0.5rem 5vw;
+}
+
+nav h1 a {
+    font-size: 2rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
 }

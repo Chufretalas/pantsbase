@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/static/js/index.js" defer></script>
     <link rel="stylesheet" href="/static/css/reset.css">
     <link rel="stylesheet" href="/static/css/global.css">
     <link rel="stylesheet" href="/static/css/index.css">
@@ -15,7 +14,7 @@
 
 <body>
     <nav>
-        <h1>Welcome to Pantsbase</h1>
+        <h1><a href="/">Welcome to Pantsbase</a></h1>
     </nav>
 
     <main>
@@ -31,9 +30,8 @@
 
         <hr>
 
-        <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
         <h2>New Table</h2>
-        <form action="new_table" method="POST" target="dummyframe" id="nt_form">
+        <form action="new_table" method="POST" id="nt_form">
             <div class="nt_name_input_wrapper">
                 <label for="new_table_name_input">Table Name</label>
                 <input type="text" name="name" id="new_table_name_input" placeholder="name your new table" required>

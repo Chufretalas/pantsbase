@@ -1,48 +1,5 @@
-:root {
-    --blue-color: rgb(23, 120, 206);
-    --dark-blue-color: rgb(12, 85, 148);
-}
-
-body {
-    background-color: black;
-    color: white;
-}
-
-nav {
-    background-color: gray;
-    padding: 0.5rem 5vw;
-}
-
-nav h1 {
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-main {
-    width: 80vw;
-    margin: 0 auto;
-}
-
-h2 {
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-button {
-    background-color: var(--blue-color);
-    border: none;
-    color: white;
-    cursor: pointer;
-    transition: all 200ms;
-
-}
-
-button:hover, .your_tables_item:hover {
+.your_tables_item:hover {
     background-color: var(--dark-blue-color);
-}
-
-button:active {
-    transform: scale(1.05);
 }
 
 .your_tables_wrapper {
@@ -50,7 +7,6 @@ button:active {
     flex-direction: column;
     row-gap: 1rem;
     padding: 20px 0;
-    /* background-color: red; */
 }
 
 .your_tables_list {
@@ -86,7 +42,7 @@ button:active {
 
 #new_table_name_input {
     width: 10rem;
-    
+
 }
 
 .nt_columns {
