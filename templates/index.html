@@ -23,9 +23,9 @@
         <section class="your_tables_wrapper">
             <h2 class="your_tables_title">Your Tables</h2>
             <ul class="your_tables_list">
-                <li><a href="" class="your_tables_item">todos</a></li>
-                <li><a href="" class="your_tables_item">completed</a></li>
-                <li><a href="" class="your_tables_item">deleted</a></li>
+                {{range .}}
+                    <li><a href="/table_view?name={{.}}" class="your_tables_item">{{.}}</a></li>
+                {{end}}
             </ul>
         </section>
 

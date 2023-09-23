@@ -6,13 +6,14 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Chufretalas/pantsbase/db"
 	m "github.com/Chufretalas/pantsbase/models"
 )
 
 var temp = template.Must(template.ParseGlob("templates/*.html"))
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	temp.ExecuteTemplate(w, "index", nil)
+	temp.ExecuteTemplate(w, "index", db.GetAllTableNames())
 }
 
 func NewTable(w http.ResponseWriter, r *http.Request) {
