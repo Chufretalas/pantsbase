@@ -57,5 +57,13 @@ func NewTable(w http.ResponseWriter, r *http.Request) {
 }
 
 func TableView(w http.ResponseWriter, r *http.Request) {
+	colsSchemas, err := db.GetSchema(r.URL.Query().Get("name"))
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(colsSchemas)
+	}
+
 	temp.ExecuteTemplate(w, "table_view", nil)
 }

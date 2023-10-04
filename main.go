@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"regexp"
 	"runtime"
 
 	"github.com/Chufretalas/pantsbase/db"
@@ -13,6 +14,9 @@ import (
 )
 
 func main() {
+
+	db.SchemaRegex = regexp.MustCompile(`(\"[A-z\s\d]+\"\s[A-z]+)`)
+
 	db.ConnectDB()
 	defer db.DB.Close()
 
