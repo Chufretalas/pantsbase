@@ -17,22 +17,44 @@
         </nav>
 
         <main>
-            <h2>New Row</h2>
-            <form action="">
-                <fieldset class="text_input">
-                    <label for="ph1">Row 1</label>
-                    <input type="text" name="ph1" id="ph1" required>
-                </fieldset>
-                <fieldset class="int_input">
-                    <label for="ph2">Row 2</label>
-                    <input type="number" name="ph2" id="ph2" pattern="\d*" required>
-                </fieldset>
-                <fieldset class="real_input">
-                    <label for="ph2">Row 2</label>
-                    <input type="number" name="ph2" id="ph2" required>
-                </fieldset>
-                <button type="submit">Confirm</button>
-            </form>
+            <section class="new_row">
+                <h2>New Row</h2>
+                <form action="" class="new_row_form">
+                    <div class="new_row_fields">
+                        <fieldset class="text_input">
+                            <label for="ph1">💬 Row 1 (TEXT)</label>
+                            <textarea name="ph1" id="ph1" cols="30" rows="10" required></textarea>
+                        </fieldset>
+                        <fieldset class="int_input">
+                            <label for="ph2">🔟 Row 2 (INT)</label>
+                            <input type="number" name="ph2" id="ph2" pattern="\d*" required>
+                        </fieldset>
+                        <!-- <fieldset class="real_input">
+                            <label for="ph2">🔢 Row 3 (REAL)</label>
+                            <input type="number" name="ph3" id="ph3" required>
+                        </fieldset>
+                        <fieldset class="int_input">
+                            <label for="ph2">🔟 Row 2 (INT)</label>
+                            <input type="number" name="ph2" id="ph2" pattern="\d*" required>
+                        </fieldset>
+                        <fieldset class="text_input">
+                            <label for="ph1">💬 Row 1 (TEXT)</label>
+                            <textarea name="ph1" id="ph1" cols="30" rows="10" required></textarea>
+                        </fieldset>
+                        <fieldset class="real_input">
+                            <label for="ph2">🔢 Row 3 (REAL)</label>
+                            <input type="number" name="ph3" id="ph3" required>
+                        </fieldset> -->
+                    </div>
+                </form>
+                <button type="button" id="submit_new_row">Confirm</button>
+            </section>
+            <section class="query">
+                <h2>Query</h2>
+                <div>
+                    Nothing here yet
+                </div>
+            </section>
         </main>
     </body>
 

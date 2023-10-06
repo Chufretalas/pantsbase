@@ -32,7 +32,7 @@
 }
 
 .nt_name_input_wrapper {
-    background-color: rgb(51, 51, 51);
+    background-color: var(--bg-lighter-color);
     width: fit-content;
     padding: 5px;
     border-radius: 5px;

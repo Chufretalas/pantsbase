@@ -53,7 +53,7 @@ func NewTable(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	http.Redirect(w, r, "/", 301)
+	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
 func TableView(w http.ResponseWriter, r *http.Request) {
