@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+
+	"github.com/Chufretalas/pantsbase/models"
 )
 
 var SchemaRegex *regexp.Regexp
 
-func GetSchema(tableName string) ([][]string, error) {
+func GetSchema(tableName string) ([]models.Schema, error) {
 	fmt.Println(tableName)
 
 	stmt, err := DB.Prepare("SELECT sql FROM sqlite_schema WHERE name = ?;")
@@ -24,7 +26,7 @@ func GetSchema(tableName string) ([][]string, error) {
 		return nil, err
 	}
 
-	parsedCols := make([][]string, 0)
+	parsedCols := make([]models.Schema, 0)
 
 	for rows.Next() {
 		var rawSchema string
@@ -35,8 +37,21 @@ func GetSchema(tableName string) ([][]string, error) {
 		}
 
 		rawCols := SchemaRegex.FindAllStringSubmatch(rawSchema, -1) // the -1 means to return all substrings matched
-		for _, rawRow := range rawCols {
-			parsedCols = append(parsedCols, strings.Split(rawRow[0], " "))
+		for i, rawRow := range rawCols {
+			sepIndex := strings.LastIndex(rawRow[0], " ")
+			name := strings.Trim(rawRow[0][:sepIndex], "\"")
+			colType := rawRow[0][sepIndex+1:]
+			var id string
+			switch colType {
+			case "INTEGER":
+				id = fmt.Sprintf("i%v", i)
+			case "REAL":
+				id = fmt.Sprintf("r%v", i)
+			case "TEXT":
+				id = fmt.Sprintf("t%v", i)
+
+			}
+			parsedCols = append(parsedCols, models.Schema{ColName: name, Type: colType, Id: id})
 		}
 	}
 

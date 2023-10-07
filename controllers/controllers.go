@@ -65,5 +65,13 @@ func TableView(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(colsSchemas)
 	}
 
-	temp.ExecuteTemplate(w, "table_view", nil)
+	allIds := make([]string, 0, len(colsSchemas))
+	for _, schema := range colsSchemas {
+		allIds = append(allIds, schema.Id)
+	}
+
+	temp.ExecuteTemplate(w, "table_view", map[string]interface{}{
+		"Schema":         colsSchemas,
+		"HiddenInputIds": strings.Join(allIds, " "),
+	})
 }

@@ -19,35 +19,34 @@
         <main>
             <section class="new_row">
                 <h2>New Row</h2>
-                <form action="" class="new_row_form">
+                <form action="" class="new_row_form" id="new_row_form">
                     <div class="new_row_fields">
-                        <fieldset class="text_input">
-                            <label for="ph1">💬 Row 1 (TEXT)</label>
-                            <textarea name="ph1" id="ph1" cols="30" rows="10" required></textarea>
-                        </fieldset>
+                        {{if .}}
+                        {{range .Schema}}
+                        {{ if eq .Type "INTEGER"}}
                         <fieldset class="int_input">
-                            <label for="ph2">🔟 Row 2 (INT)</label>
-                            <input type="number" name="ph2" id="ph2" pattern="\d*" required>
+                            <label for="{{.Id}}">🔟 "{{.ColName}}" (INT)</label>
+                            <input type="number" name="{{.Id}}" id="{{.Id}}" pattern="\d*" placeholder="1023" required>
                         </fieldset>
-                        <!-- <fieldset class="real_input">
-                            <label for="ph2">🔢 Row 3 (REAL)</label>
-                            <input type="number" name="ph3" id="ph3" required>
-                        </fieldset>
-                        <fieldset class="int_input">
-                            <label for="ph2">🔟 Row 2 (INT)</label>
-                            <input type="number" name="ph2" id="ph2" pattern="\d*" required>
-                        </fieldset>
-                        <fieldset class="text_input">
-                            <label for="ph1">💬 Row 1 (TEXT)</label>
-                            <textarea name="ph1" id="ph1" cols="30" rows="10" required></textarea>
-                        </fieldset>
+                        {{else if eq .Type "REAL"}}
                         <fieldset class="real_input">
-                            <label for="ph2">🔢 Row 3 (REAL)</label>
-                            <input type="number" name="ph3" id="ph3" required>
-                        </fieldset> -->
+                            <label for="{{.Id}}">🔢 "{{.ColName}}" (REAL)</label>
+                            <input type="number" name="{{.Id}}" id="{{.Id}}" placeholder="9.621" required>
+                        </fieldset>
+                        {{else}}
+                        <fieldset class="text_input">
+                            <label for="{{.Id}}">💬 "{{.ColName}}" (TEXT)</label>
+                            <textarea name="{{.Id}}" id="{{.Id}}" cols="30" rows="10" placeholder="write something..." required></textarea>
+                        </fieldset>
+                        {{end}}
+                        {{end}}
+                        {{else}}
+                        <span>no rows other than id</span>
+                        {{end}}
+                        <input type="hidden" id="new_row_ids" value="{{.HiddenInputIds}}">
                     </div>
                 </form>
-                <button type="button" id="submit_new_row">Confirm</button>
+                <button type="submit" id="submit_new_row" form="new_row_form">Confirm</button>
             </section>
             <section class="query">
                 <h2>Query</h2>
@@ -57,6 +56,12 @@
             </section>
         </main>
     </body>
+    <script>
+        const newRowButton = document.querySelector("#submit_new_row")
+        newRowButton.addEventListener("click", (e) => {
+            e.preventDefault()
+        })
+    </script>
 
 </html>
 {{end}}
