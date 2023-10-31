@@ -1,12 +1,16 @@
 let newIndex = 0
 let columnIndexes = []
+
 const columnIndexesInput = document.querySelector("#column_indexes_input")
+
 const form = document.querySelector("#nt_form")
 form.addEventListener("submit", (e => {
     console.log(e)
 }))
+
 const ntColumns = document.querySelector(".nt_columns")
 const ncButton = document.querySelector("#nt_new_column_button")
+
 ncButton.addEventListener("click", (e) => {
     e.preventDefault()
     columnIndexes.push(newIndex)
@@ -33,6 +37,7 @@ ncButton.addEventListener("click", (e) => {
     document.querySelector(`#remove_new_column_${newIndex}`).addEventListener("click", removeNewColumn)
     newIndex++
 })
+
 function removeNewColumn(e) {
     e.preventDefault()
     console.log("input to delete:", e.target.value) // remember that this value is a string !!!!!!

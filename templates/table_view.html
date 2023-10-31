@@ -19,9 +19,9 @@
         <main>
             <section class="new_row">
                 <h2>New Row</h2>
-                <form action="" class="new_row_form" id="new_row_form">
+                <form action="new_row" method="POST" class="new_row_form" id="new_row_form">
                     <div class="new_row_fields">
-                        {{if .}}
+                        {{if .Schema}}
                         {{range .Schema}}
                         {{ if eq .Type "INTEGER"}}
                         <fieldset class="int_input">
@@ -43,10 +43,17 @@
                         {{else}}
                         <span>no rows other than id</span>
                         {{end}}
-                        <input type="hidden" id="new_row_ids" value="{{.HiddenInputIds}}">
+                        <input type="hidden" name="new_row_ids" id="new_row_ids" value="{{.HiddenInputIds}}">
+                        <input type="hidden" name="table_name" id="table_name" value="{{.TableName}}">
                     </div>
                 </form>
+
+                {{if .Schema}}
                 <button type="submit" id="submit_new_row" form="new_row_form">Confirm</button>
+                {{else}}
+                <button id="submit_new_row">Empty table 😵</button>
+                {{end}}
+
             </section>
             <section class="query">
                 <h2>Query</h2>
@@ -57,9 +64,9 @@
         </main>
     </body>
     <script>
-        const newRowButton = document.querySelector("#submit_new_row")
-        newRowButton.addEventListener("click", (e) => {
-            e.preventDefault()
+        const newRowForm = document.querySelector("#new_row_form")
+        newRowForm.addEventListener("submit", (e) => {
+            console.log(e)
         })
     </script>
 
