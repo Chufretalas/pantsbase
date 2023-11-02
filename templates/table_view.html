@@ -17,6 +17,8 @@
         </nav>
 
         <main>
+
+            <!-- -------------------------------------------------- New Row -------------------------------------------------- -->
             <section class="new_row">
                 <h2>New Row</h2>
                 <form action="new_row" method="POST" class="new_row_form" id="new_row_form">
@@ -36,7 +38,8 @@
                         {{else}}
                         <fieldset class="text_input">
                             <label for="{{.Id}}">💬 "{{.ColName}}" (TEXT)</label>
-                            <textarea name="{{.Id}}" id="{{.Id}}" cols="30" rows="10" placeholder="write something..." required></textarea>
+                            <textarea name="{{.Id}}" id="{{.Id}}" cols="30" rows="10" placeholder="write something..."
+                                required></textarea>
                         </fieldset>
                         {{end}}
                         {{end}}
@@ -55,18 +58,57 @@
                 {{end}}
 
             </section>
+            <!-- -------------------------------------------------- end New Row -------------------------------------------------- -->
+
+            <!-- -------------------------------------------------- Query -------------------------------------------------- -->
             <section class="query">
                 <h2>Query</h2>
                 <div>
-                    Nothing here yet
+                    <div class="query_filters">
+                        <fieldset class="query_filter_set">
+                            <label for="query_quantity">Limit</label>
+                            <input type="number" name="query_limit" id="query_limit" pattern="\d*" min="1" value="50">
+                        </fieldset>
+                        <fieldset class="query_filter_set">
+                            <label for="query_sort_by">Sort by</label>
+                            <select name="query_sort_by" id="query_sort_by">
+                                <option value="NONE 😵" selected>NONE 😵</option>
+                                {{range .Schema}}
+                                <option value="{{.ColName}}">{{.ColName}}</option>
+                                {{end}}
+                            </select>
+                        </fieldset>
+                        <fieldset class="query_filter_set hidden" id="query_sort_direc_set">
+                            <label for="query_sort_direc">How to sort</label>
+                            <select name="query_sort_direc" id="query_sort_direc">
+                                <option value="DESC">DESC</option>
+                                <option value="ASC">ASC</option>
+                            </select>
+                        </fieldset>
+                    </div>
+                    <button id="query_button">Query!</button>
+                    <hr>
+                    <div class="query_results">
+                        Opa, aqui estão os resultados
+                    </div>
                 </div>
             </section>
+            <!-- -------------------------------------------------- end Query -------------------------------------------------- -->
         </main>
     </body>
+
     <script>
-        const newRowForm = document.querySelector("#new_row_form")
-        newRowForm.addEventListener("submit", (e) => {
-            console.log(e)
+        const sortBy = document.querySelector("#query_sort_by")
+        const sortByDirectionSet = document.querySelector("#query_sort_direc_set")
+
+        sortBy.addEventListener("change", (e) => {
+            if (e.target.value === "NONE 😵") {
+                if (!sortByDirectionSet.classList.contains("hidden")) {
+                    sortByDirectionSet.classList.add("hidden")
+                }
+            } else {
+                sortByDirectionSet.classList.remove("hidden")
+            }
         })
     </script>
 
