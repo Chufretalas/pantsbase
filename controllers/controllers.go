@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -116,4 +117,18 @@ func NewRow(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, r.Header.Get("Referer"), http.StatusMovedPermanently)
+}
+
+func Query(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	var t map[string]interface{}
+	err := decoder.Decode(&t)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(t)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"opa": "aaaaaa"})
 }

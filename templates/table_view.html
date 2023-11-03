@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="/static/css/reset.css">
         <link rel="stylesheet" href="/static/css/global.css">
         <link rel="stylesheet" href="/static/css/table_view.css">
+        <script src="/static/js/query.js" defer></script>
         <title>Pantsbase 👖</title>
     </head>
 
@@ -98,18 +99,7 @@
     </body>
 
     <script>
-        const sortBy = document.querySelector("#query_sort_by")
-        const sortByDirectionSet = document.querySelector("#query_sort_direc_set")
-
-        sortBy.addEventListener("change", (e) => {
-            if (e.target.value === "NONE 😵") {
-                if (!sortByDirectionSet.classList.contains("hidden")) {
-                    sortByDirectionSet.classList.add("hidden")
-                }
-            } else {
-                sortByDirectionSet.classList.remove("hidden")
-            }
-        })
+        // :)
     </script>
 
 </html>
