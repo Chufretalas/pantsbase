@@ -71,17 +71,17 @@
                             <input type="number" name="query_limit" id="query_limit" pattern="\d*" min="1" value="50">
                         </fieldset>
                         <fieldset class="query_filter_set">
-                            <label for="query_sort_by">Sort by</label>
-                            <select name="query_sort_by" id="query_sort_by">
+                            <label for="query_order_by">Order by</label>
+                            <select name="query_order_by" id="query_order_by">
                                 <option value="NONE 😵" selected>NONE 😵</option>
                                 {{range .Schema}}
                                 <option value="{{.ColName}}">{{.ColName}}</option>
                                 {{end}}
                             </select>
                         </fieldset>
-                        <fieldset class="query_filter_set hidden" id="query_sort_direc_set">
-                            <label for="query_sort_direc">How to sort</label>
-                            <select name="query_sort_direc" id="query_sort_direc">
+                        <fieldset class="query_filter_set hidden" id="query_order_direc_set">
+                            <label for="query_order_direc">How to order</label>
+                            <select name="query_order_direc" id="query_order_direc">
                                 <option value="DESC">DESC</option>
                                 <option value="ASC">ASC</option>
                             </select>

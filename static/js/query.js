@@ -1,13 +1,13 @@
 const limit = document.querySelector("#query_limit")
-const sortBy = document.querySelector("#query_sort_by")
-const sortDirec = document.querySelector("#query_sort_direc")
-const sortByDirectionSet = document.querySelector("#query_sort_direc_set")
+const orderBy = document.querySelector("#query_order_by")
+const orderDirec = document.querySelector("#query_order_direc")
+const sortByDirectionSet = document.querySelector("#query_order_direc_set")
 const queryButton = document.querySelector("#query_button")
 
 const params = new URLSearchParams(window.location.search)
 const tableName = params.get("name")
 
-sortBy.addEventListener("change", (e) => {
+orderBy.addEventListener("change", (e) => {
     if (e.target.value === "NONE 😵") {
         if (!sortByDirectionSet.classList.contains("hidden")) {
             sortByDirectionSet.classList.add("hidden")
@@ -30,8 +30,8 @@ queryButton.addEventListener("click", async (e) => {
             body: JSON.stringify({
                 tableName: tableName,
                 limit: limit.value < 0 ? 0 : limit.value,
-                sortBy: sortBy.value,
-                sortDirec: sortDirec.value
+                orderBy: orderBy.value,
+                orderDirec: orderDirec.value
             })
         }
     )

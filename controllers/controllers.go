@@ -124,11 +124,37 @@ func Query(w http.ResponseWriter, r *http.Request) {
 	var t map[string]interface{}
 	err := decoder.Decode(&t)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode([]interface{}{})
+		return
 	}
 
-	fmt.Println(t)
+	tableName := fmt.Sprintf("%v", t["tableName"])
+
+	limit, err := strconv.Atoi(fmt.Sprintf("%v", t["limit"]))
+	if err != nil {
+		fmt.Println(err)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode([]interface{}{})
+		return
+	}
+
+	orderBy := fmt.Sprintf("%v", t["orderBy"])
+	orderDirec := fmt.Sprintf("%v", t["orderDirec"])
+
+	data, err := db.Query(tableName, limit, orderBy, orderDirec)
+	if err != nil {
+		fmt.Println(err)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode([]interface{}{})
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"opa": "aaaaaa"})
+	json.NewEncoder(w).Encode(data)
 }
