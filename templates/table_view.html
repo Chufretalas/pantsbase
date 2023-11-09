@@ -67,7 +67,7 @@
                 <div>
                     <div class="query_filters">
                         <fieldset class="query_filter_set">
-                            <label for="query_quantity">Limit</label>
+                            <label for="query_limit">Limit</label>
                             <input type="number" name="query_limit" id="query_limit" pattern="\d*" min="1" value="50">
                         </fieldset>
                         <fieldset class="query_filter_set">
@@ -89,8 +89,19 @@
                     </div>
                     <button id="query_button">Query!</button>
                     <hr>
-                    <div class="query_results">
-                        Opa, aqui estão os resultados
+                    <div class="query_results_wrapper">
+                        <table class="query_results">
+                            <thead>
+                                <tr>
+                                    <th>id</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </section>
