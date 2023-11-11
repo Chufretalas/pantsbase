@@ -10,18 +10,7 @@ const queryBody = document.querySelector("#query_results_body")
 const params = new URLSearchParams(window.location.search)
 const tableName = params.get("name")
 
-orderBy.addEventListener("change", (e) => {
-    if (e.target.value === "NONE 😵") {
-        if (!sortByDirectionSet.classList.contains("hidden")) {
-            sortByDirectionSet.classList.add("hidden")
-        }
-    } else {
-        sortByDirectionSet.classList.remove("hidden")
-    }
-})
-
-queryButton.addEventListener("click", async (e) => {
-    e.preventDefault()
+async function query() {
     const rawResp = await fetch(`/query`,
         {
             method: "POST",
@@ -43,7 +32,9 @@ queryButton.addEventListener("click", async (e) => {
         queryHead.innerHTML = ""
         queryBody.innerHTML = ""
 
-        const columns = Object.keys(resp[0])
+        let columns = Object.keys(resp[0])
+
+        columns = ["id", ...columns.filter(c => c !== "id")]
 
         columns.forEach(col => {
             const newth = document.createElement("th")
@@ -53,13 +44,51 @@ queryButton.addEventListener("click", async (e) => {
 
         resp.forEach(entry => {
             const newTr = document.createElement("tr")
-            const values = Object.values(entry)
-            values.forEach(v => {
+            columns.forEach(col => {
                 const newTd = document.createElement("td")
-                newTd.innerText = v
+                if (col === "id") {
+                    const wrapper = document.createElement("div")
+                    wrapper.classList.add("query_id_td")
+                    const id = entry[col]
+                    const deleteButton = document.createElement("button")
+                    deleteButton.classList.add("query_delete_button")
+                    deleteButton.innerText = "X"
+                    deleteButton.addEventListener("click", async (e) => {
+                        e.preventDefault()
+                        let url = "/delete_one?"
+                        url += "table_name=" + tableName.replaceAll(" ", "%20")
+                        url += `&id=${id}`
+                        const rawResp = await fetch(url, { method: "DELETE" })
+                        if (rawResp.status === 200) {
+                            query()
+                        }
+                    })
+                    const idSpan = document.createElement("span")
+                    idSpan.innerText = `${id}`
+                    wrapper.appendChild(deleteButton)
+                    wrapper.appendChild(idSpan)
+                    newTd.append(wrapper)
+                } else {
+                    newTd.innerText = entry[col]
+                }
                 newTr.appendChild(newTd)
             })
             queryBody.appendChild(newTr)
         })
     }
+}
+
+orderBy.addEventListener("change", (e) => {
+    if (e.target.value === "NONE 😵") {
+        if (!sortByDirectionSet.classList.contains("hidden")) {
+            sortByDirectionSet.classList.add("hidden")
+        }
+    } else {
+        sortByDirectionSet.classList.remove("hidden")
+    }
+})
+
+queryButton.addEventListener("click", async (e) => {
+    e.preventDefault()
+    query()
 })

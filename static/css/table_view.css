@@ -150,3 +150,18 @@ button {
     text-align: center;
     border: 1px solid white;
 }
+
+.query_id_td {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    justify-content: center;
+}
+
+.query_delete_button {
+    background-color: red;
+    width: 80%;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+}
