@@ -158,3 +158,25 @@ func Query(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(data)
 }
+
+func DeleteOne(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+
+	if err != nil {
+		fmt.Println(err.Error())
+		http.Error(w, "Could not get the id from the request url params", http.StatusBadRequest)
+		return
+	}
+
+	table_name := r.URL.Query().Get("table_name")
+
+	if table_name == "" {
+		http.Error(w, "Could not get the table_name from the request url params", http.StatusBadRequest)
+		return
+	}
+
+	if db.DeleteOne(table_name, id) != nil {
+		http.Error(w, "Could not delete the especified item.", http.StatusInternalServerError)
+	}
+
+}
