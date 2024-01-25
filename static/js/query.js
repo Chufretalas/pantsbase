@@ -1,3 +1,5 @@
+import { openUpdateDialog } from "./update_row.js"
+
 const limit = document.querySelector("#query_limit")
 const orderBy = document.querySelector("#query_order_by")
 const orderDirec = document.querySelector("#query_order_direc")
@@ -50,11 +52,12 @@ async function query() {
                     const wrapper = document.createElement("div")
                     wrapper.classList.add("query_id_td")
                     const id = entry[col]
+                    // ------ Creating the delete button ------
                     const deleteButton = document.createElement("button")
                     deleteButton.classList.add("query_delete_button")
                     deleteButton.innerText = "X"
                     deleteButton.addEventListener("click", async (e) => {
-                        e.preventDefault()
+                        e.preventDefault() //TODO: add a confirm alert?
                         let url = "/delete_one?"
                         url += "table_name=" + tableName.replaceAll(" ", "%20")
                         url += `&id=${id}`
@@ -63,10 +66,21 @@ async function query() {
                             query()
                         }
                     })
+                    // ----- creating the actual text
                     const idSpan = document.createElement("span")
                     idSpan.innerText = `${id}`
+                    // ------ Creating the edit button ------
+                    const editButton = document.createElement("button")
+                    editButton.classList.add("query_edit_button")
+                    editButton.innerText = "🖋"
+                    editButton.addEventListener("click", (e) => {
+                        e.preventDefault()
+                        openUpdateDialog(entry)
+                    })
+                    // ----- putting stuff together
                     wrapper.appendChild(deleteButton)
                     wrapper.appendChild(idSpan)
+                    wrapper.appendChild(editButton)
                     newTd.append(wrapper)
                 } else {
                     newTd.innerText = entry[col]
@@ -92,3 +106,5 @@ queryButton.addEventListener("click", async (e) => {
     e.preventDefault()
     query()
 })
+
+export const TESTE = "aaaaaa"

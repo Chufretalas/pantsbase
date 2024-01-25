@@ -8,20 +8,22 @@
         <link rel="stylesheet" href="/static/css/reset.css">
         <link rel="stylesheet" href="/static/css/global.css">
         <link rel="stylesheet" href="/static/css/table_view.css">
-        <script src="/static/js/query.js" defer></script>
+        <script type="module" src="/static/js/query.js" defer></script>
+        <script type="module" src="/static/js/update_row.js" defer></script>
         <title>Pantsbase 👖</title>
     </head>
 
     <body>
         <nav>
             <h1><a href="/">Welcome to Pantsbase</a> </h1>
+            <!-- TODO: Show the current table name, it's very confunsing right now -->
+            <!-- TODO: delete table. Here maybe? -->
         </nav>
 
         <main>
-
-            <!-- -------------------------------------------------- New Row -------------------------------------------------- -->
+            <!-- -------------------------------------------------- New Row (and update) -------------------------------------------------- -->
             <section class="new_row">
-                <h2>New Row</h2>
+                <h2 id="row_form_title">New Row</h2>
                 <form action="new_row" method="POST" class="new_row_form" id="new_row_form">
                     <div class="new_row_fields">
                         {{if .Schema}}
@@ -104,7 +106,46 @@
                 </div>
             </section>
             <!-- -------------------------------------------------- end Query -------------------------------------------------- -->
+            <dialog id="update_dialog">
+                <form method="dialog" id="update_dialog_close_form">
+                    <button id="close_update_dialog_button">X</button>
+                </form>
+                <form action="update_row" method="POST" class="new_row_form" id="update_row_form">
+                    <div class="new_row_fields">
+                        {{if .Schema}}
+                        {{range .Schema}}
+                        {{ if eq .Type "INTEGER"}}
+                        <fieldset class="int_input">
+                            <label for="{{.Id}}">🔟 "{{.ColName}}" (INT)</label>
+                            <input type="number" name="{{.Id}}" id="{{.Id}}" pattern="\d*" placeholder="1023" required>
+                        </fieldset>
+                        {{else if eq .Type "REAL"}}
+                        <fieldset class="real_input">
+                            <label for="{{.Id}}">🔢 "{{.ColName}}" (REAL)</label>
+                            <input type="number" name="{{.Id}}" id="{{.Id}}" placeholder="9.621" required>
+                        </fieldset>
+                        {{else}}
+                        <fieldset class="text_input">
+                            <label for="{{.Id}}">💬 "{{.ColName}}" (TEXT)</label>
+                            <textarea name="{{.Id}}" id="{{.Id}}" cols="30" rows="10" placeholder="write something..."
+                                required></textarea>
+                        </fieldset>
+                        {{end}}
+                        {{end}}
+                        {{else}}
+                        <span>no rows other than id</span>
+                        {{end}}
+                        <input type="hidden" name="update_row_ids" id="update_row_ids" value="{{.HiddenInputIds}}">
+                        <input type="hidden" name="update_table_name" id="update_table_name" value="{{.TableName}}">
+                        <input type="hidden" name="update_row_id" id="update_row_id">
+                    </div>
+                </form>
+                
+            </dialog>
         </main>
+        {{if .Schema}}
+        <input type="hidden" name="schema" id="schema" value="{{.Schema}}">
+        {{end}}
     </body>
 
     <script>

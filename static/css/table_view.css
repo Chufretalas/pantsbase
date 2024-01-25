@@ -165,3 +165,43 @@ button {
     display: flex;
     justify-content: center;
 }
+
+.query_edit_button {
+    background-color: var(--blue-color);
+    width: 80%;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Update dialog */
+
+#update_dialog {
+    color: white;
+    border: 3px solid var(--blue-color);
+    border-radius: 10px;
+    background-color: black;
+    max-width: 900px;
+}
+
+#update_dialog::backdrop {
+    background-color: black;
+    opacity: 70%;
+}
+
+#update_dialog_close_form {
+    margin-bottom: 20px;
+}
+
+#close_update_dialog_button {
+    position: relative;
+    top: 2px;
+    left: 2px;
+    background-color: red;
+    border-radius: 999999px;
+    transition: all 200ms;
+}
+
+#close_update_dialog_button:hover {
+    background-color: var(--dark-blue-color);
+}
