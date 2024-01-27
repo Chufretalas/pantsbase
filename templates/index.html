@@ -2,52 +2,53 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/css/reset.css">
-    <link rel="stylesheet" href="/static/css/global.css">
-    <link rel="stylesheet" href="/static/css/index.css">
-    <script src="/static/js/new_table_form.js" defer></script>
-    <title>Pantsbase 👖</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/static/css/reset.css">
+        <link rel="stylesheet" href="/static/css/global.css">
+        <link rel="stylesheet" href="/static/css/index.css">
+        <script src="/static/js/new_table_form.js" defer></script>
+        <title>Pantsbase 👖</title>
+    </head>
 
-<body>
-    <nav>
-        <h1><a href="/">Welcome to Pantsbase</a></h1>
-    </nav>
+    <body>
+        <nav>
+            <h1><a href="/">Welcome to Pantsbase</a></h1>
+        </nav>
 
-    <main>
+        <main>
 
-        <section class="your_tables_wrapper">
-            <h2 class="your_tables_title">Your Tables</h2>
-            <ul class="your_tables_list">
-                {{range .}}
-                    <li><a href="/table_view?name={{.}}" class="your_tables_item">{{.}}</a></li>
-                {{end}}
-            </ul>
-        </section>
+            <section class="your_tables_wrapper">
+                <h2 class="your_tables_title">Your Tables</h2>
+                <div class="your_tables_list">
+                    {{range .}}
+                    <a href="/table_view?name={{.}}" class="your_tables_item">{{.}}</a>
+                    {{end}}
+                </div>
+            </section>
 
-        <hr>
+            <hr>
 
-        <h2>New Table</h2>
-        <form action="new_table" method="POST" id="nt_form">
-            <div class="nt_name_input_wrapper">
-                <label for="new_table_name_input">Table Name</label>
-                <input type="text" name="name" id="new_table_name_input" placeholder="name your new table" required>
-            </div>
-            <span>* Note that a "id INTEGER PRIMARY KEY AUTOINCREMENT" is automatically created for every table</span>
-            <ol class="nt_columns">
-                <!-- Here the column inputs will be dynamically created -->
-            </ol>
-            <button id="nt_new_column_button">+<span>new column</span></button>
-            <input type="hidden" name="column_indexes" id="column_indexes_input">
-            <button type="submit" id="new_table_button">Create</button>
-        </form>
+            <h2>New Table</h2>
+            <form action="new_table" method="POST" id="nt_form">
+                <div class="nt_name_input_wrapper">
+                    <label for="new_table_name_input">Table Name</label>
+                    <input type="text" name="name" id="new_table_name_input" placeholder="name your new table" required>
+                </div>
+                <span>* Note that a "id INTEGER PRIMARY KEY AUTOINCREMENT" is automatically created for every
+                    table</span>
+                <ol class="nt_columns">
+                    <!-- Here the column inputs will be dynamically created -->
+                </ol>
+                <button id="nt_new_column_button">+<span>new column</span></button>
+                <input type="hidden" name="column_indexes" id="column_indexes_input">
+                <button type="submit" id="new_table_button">Create</button>
+            </form>
 
-        <hr>
-    </main>
-</body>
+            <hr>
+        </main>
+    </body>
 
 </html>
 {{end}}

@@ -1,7 +1,3 @@
-.your_tables_item:hover {
-    background-color: var(--dark-blue-color);
-}
-
 .your_tables_wrapper {
     display: flex;
     flex-direction: column;
@@ -11,6 +7,7 @@
 
 .your_tables_list {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.4rem;
 }
 
@@ -23,6 +20,10 @@
     margin: 0.5rem;
     background-color: var(--blue-color);
     transition: all 200ms;
+}
+
+.your_tables_item:hover {
+    background-color: var(--dark-blue-color);
 }
 
 #nt_form {

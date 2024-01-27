@@ -38,12 +38,14 @@ button:active {
     transform: scale(1.05);
 }
 
-*, h1, span, textarea, input {
+*, h1, span, textarea, input, button, a {
     font-family: 'Inconsolata', monospace;
 }
 
 nav {
-    background-color: gray;
+    display: grid;
+    grid-template-columns: 4fr 5fr 4fr;
+    background-color: rgb(100, 100, 100);
     padding: 0.5rem 5vw;
 }
 

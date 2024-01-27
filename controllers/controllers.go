@@ -207,3 +207,13 @@ func extractRowFormValues(r *http.Request, fieldIds []string) ([]interface{}, er
 
 	return values, nil
 }
+
+func DeleteTable(w http.ResponseWriter, r *http.Request) {
+	tableName := strings.Split(r.URL.Path, "/")[2]
+
+	_, err := db.DB.Exec(fmt.Sprintf("DROP TABLE IF EXISTS \"%v\";", tableName))
+
+	if err != nil {
+		log.Println(err)
+	}
+}

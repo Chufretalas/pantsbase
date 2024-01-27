@@ -15,9 +15,9 @@
 
     <body>
         <nav>
-            <h1><a href="/">Welcome to Pantsbase</a> </h1>
-            <!-- TODO: Show the current table name, it's very confunsing right now -->
-            <!-- TODO: delete table. Here maybe? -->
+            <h1><a href="/">Welcome to Pantsbase</a></h1>
+            <h1 id="table_name_title">Table: {{.TableName}}</h1>
+            <button id="delete_table_button">⚠ DELETE TABLE ⚠</button>
         </nav>
 
         <main>
@@ -36,7 +36,7 @@
                         {{else if eq .Type "REAL"}}
                         <fieldset class="real_input">
                             <label for="{{.Id}}">🔢 "{{.ColName}}" (REAL)</label>
-                            <input type="number" name="{{.Id}}" id="{{.Id}}" placeholder="9.621" required>
+                            <input type="number" name="{{.Id}}" id="{{.Id}}" placeholder="9.621" step="any" required>
                         </fieldset>
                         {{else}}
                         <fieldset class="text_input">
@@ -122,7 +122,7 @@
                         {{else if eq .Type "REAL"}}
                         <fieldset class="real_input">
                             <label for="{{.Id}}">🔢 "{{.ColName}}" (REAL)</label>
-                            <input type="number" name="{{.Id}}" id="{{.Id}}" placeholder="9.621" required>
+                            <input type="number" name="{{.Id}}" id="{{.Id}}" placeholder="9.621" step="any" required>
                         </fieldset>
                         {{else}}
                         <fieldset class="text_input">
@@ -149,7 +149,17 @@
     </body>
 
     <script>
-        // :)
+        const deleteTableButton = document.getElementById("delete_table_button")
+
+        deleteTableButton.addEventListener("click", async (e) => {
+            e.preventDefault()
+            if (confirm("Are you sure you wnat to delete table \"{{.TableName}}\"")) {
+                const res = await fetch("/delete_table/{{.TableName}}", { method: "DELETE" })
+                if (res.status === 200) {
+                    window.location.replace("/")
+                }
+            }
+        })
     </script>
 
 </html>

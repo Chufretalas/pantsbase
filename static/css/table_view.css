@@ -184,6 +184,11 @@ button {
     max-width: 900px;
 }
 
+#update_button {
+    margin: 0 auto;
+    margin-top: 15px;
+}
+
 #update_dialog input {
     color: black;
 }
@@ -209,3 +214,20 @@ button {
 #close_update_dialog_button:hover {
     background-color: var(--dark-blue-color);
 }
+
+/* End Update dialog */
+
+#table_name_title {
+    font-size: 2rem;
+    text-align: center;
+}
+
+#delete_table_button {
+    margin: 0 0 0 auto;
+    background-color: red;
+    transition: all 200ms;
+}
+
+#delete_table_button:hover {
+    background-color: rgb(123, 0, 0);
+}   
