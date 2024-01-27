@@ -184,6 +184,10 @@ button {
     max-width: 900px;
 }
 
+#update_dialog input {
+    color: black;
+}
+
 #update_dialog::backdrop {
     background-color: black;
     opacity: 70%;

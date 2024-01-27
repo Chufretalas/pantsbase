@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"html/template"
 	"log"
@@ -19,6 +20,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	temp.ExecuteTemplate(w, "index", db.GetAllTableNames())
 }
 
+// TODO: disallow non-ASCII characters on table columns
 func NewTable(w http.ResponseWriter, r *http.Request) {
 	tableName := r.FormValue("name")
 
@@ -79,40 +81,13 @@ func TableView(w http.ResponseWriter, r *http.Request) {
 
 func NewRow(w http.ResponseWriter, r *http.Request) {
 
-	failed := false
-
 	tableName := r.FormValue("table_name")
 	fieldIds := strings.Split(r.FormValue("new_row_ids"), " ") // it's actually the field names not ids, I'm just dense and I am not changing it now
 	fmt.Println(fieldIds)
-	values := make([]interface{}, 0, len(fieldIds))
 
-	for _, ids := range fieldIds {
-		valueRaw := r.FormValue(ids)
-		switch string(ids[0]) {
-		case "i":
-			convertedValue, err := strconv.Atoi(valueRaw)
-			if err != nil {
-				fmt.Println(err)
-				failed = true
-				break
-			}
-			values = append(values, convertedValue)
+	values, err := extractRowFormValues(r, fieldIds)
 
-		case "f":
-			convertedValue, err := strconv.ParseFloat(valueRaw, 64)
-			if err != nil {
-				fmt.Println(err)
-				failed = true
-				break
-			}
-			values = append(values, convertedValue)
-
-		default:
-			values = append(values, "'"+r.FormValue(ids)+"'")
-		}
-	}
-
-	if !failed {
+	if err == nil {
 		db.NewRow(tableName, values)
 	}
 
@@ -179,4 +154,56 @@ func DeleteOne(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Could not delete the especified item.", http.StatusInternalServerError)
 	}
 
+}
+
+func UpdateRow(w http.ResponseWriter, r *http.Request) {
+
+	tableName := r.FormValue("update_table_name")
+	rowId := r.FormValue("update_row_id")
+	fieldIds := strings.Split(r.FormValue("update_row_ids"), " ")
+
+	values, err := extractRowFormValues(r, fieldIds)
+
+	if err == nil {
+		db.UpdateRow(tableName, values, rowId)
+	}
+
+	http.Redirect(w, r, r.Header.Get("Referer"), http.StatusMovedPermanently)
+}
+
+func extractRowFormValues(r *http.Request, fieldIds []string) ([]interface{}, error) {
+	failed := false
+	values := make([]interface{}, 0, len(fieldIds))
+
+	for _, ids := range fieldIds {
+		valueRaw := r.FormValue(ids)
+		switch string(ids[0]) {
+		case "i":
+			convertedValue, err := strconv.Atoi(valueRaw)
+			if err != nil {
+				fmt.Println(err)
+				failed = true
+				break
+			}
+			values = append(values, convertedValue)
+
+		case "f":
+			convertedValue, err := strconv.ParseFloat(valueRaw, 64)
+			if err != nil {
+				fmt.Println(err)
+				failed = true
+				break
+			}
+			values = append(values, convertedValue)
+
+		default:
+			values = append(values, "'"+r.FormValue(ids)+"'")
+		}
+	}
+
+	if failed {
+		return nil, errors.New("error parsing the form")
+	}
+
+	return values, nil
 }

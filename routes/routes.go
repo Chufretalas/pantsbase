@@ -17,6 +17,7 @@ func LoadRoutes() {
 	Router.HandleFunc("/new_row", controllers.NewRow).Methods("POST")
 	Router.HandleFunc("/query", controllers.Query).Methods("POST")
 	Router.HandleFunc("/delete_one", controllers.DeleteOne).Methods("DELETE")
+	Router.HandleFunc("/update_row", controllers.UpdateRow).Methods("POST")
 	Router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static")))) // I love you gorilla mux ❤
 	http.Handle("/", Router)
 }

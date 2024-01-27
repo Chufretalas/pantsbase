@@ -57,7 +57,7 @@
                 {{if .Schema}}
                 <button type="submit" id="submit_new_row" form="new_row_form">Confirm</button>
                 {{else}}
-                <button id="submit_new_row">Empty table 😵</button>
+                <button id="submit_new_row_empty">Empty table 😵</button>
                 {{end}}
 
             </section>
@@ -140,7 +140,7 @@
                         <input type="hidden" name="update_row_id" id="update_row_id">
                     </div>
                 </form>
-                
+                <button id="update_button" type="submit" form="update_row_form">Update!</button>
             </dialog>
         </main>
         {{if .Schema}}
