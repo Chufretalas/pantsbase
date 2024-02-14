@@ -13,7 +13,7 @@ const params = new URLSearchParams(window.location.search)
 const tableName = params.get("name")
 
 async function query() {
-    const rawResp = await fetch(`/query`,
+    const rawResp = await fetch(`/api/query/${tableName}`,
         {
             method: "POST",
             headers: {
@@ -21,7 +21,6 @@ async function query() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                tableName: tableName,
                 limit: limit.value < 0 ? 0 : limit.value,
                 orderBy: orderBy.value,
                 orderDirec: orderDirec.value

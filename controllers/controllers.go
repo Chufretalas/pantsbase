@@ -107,7 +107,7 @@ func Query(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tableName := fmt.Sprintf("%v", t["tableName"])
+	tableName := mux.Vars(r)["table_name"]
 
 	limit, err := strconv.Atoi(fmt.Sprintf("%v", t["limit"]))
 	if err != nil {
