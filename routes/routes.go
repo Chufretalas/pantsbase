@@ -17,9 +17,9 @@ func LoadRoutes() {
 	Router.HandleFunc("/new_table", controllers.NewTable).Methods("POST")
 	Router.HandleFunc("/new_row", controllers.NewRow).Methods("POST")
 	Router.HandleFunc("/query", controllers.Query).Methods("POST")
-	Router.HandleFunc("/delete_one", controllers.DeleteOne).Methods("DELETE")
 	Router.HandleFunc("/update_row", controllers.UpdateRow).Methods("POST")
-	Router.HandleFunc("/delete_table/{table_name}", controllers.DeleteTable).Methods("DELETE")
+	Router.HandleFunc("/api/delete_one/{table_name}/{id}", controllers.DeleteOne).Methods("DELETE")
+	Router.HandleFunc("/api/delete_table/{table_name}", controllers.DeleteTable).Methods("DELETE")
 	Router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static")))) // I love you gorilla mux ❤
 	http.Handle("/", Router)
 }

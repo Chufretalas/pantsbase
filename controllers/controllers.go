@@ -12,6 +12,7 @@ import (
 
 	"github.com/Chufretalas/pantsbase/db"
 	m "github.com/Chufretalas/pantsbase/models"
+	"github.com/gorilla/mux"
 )
 
 var temp = template.Must(template.ParseGlob("templates/*.html"))
@@ -135,18 +136,14 @@ func Query(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteOne(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	vars := mux.Vars(r)
+
+	table_name := vars["table_name"]
+	id, err := strconv.Atoi(vars["id"])
 
 	if err != nil {
 		fmt.Println(err.Error())
-		http.Error(w, "Could not get the id from the request url params", http.StatusBadRequest)
-		return
-	}
-
-	table_name := r.URL.Query().Get("table_name")
-
-	if table_name == "" {
-		http.Error(w, "Could not get the table_name from the request url params", http.StatusBadRequest)
+		http.Error(w, "The id is not a valid integer", http.StatusBadRequest)
 		return
 	}
 
@@ -209,7 +206,9 @@ func extractRowFormValues(r *http.Request, fieldIds []string) ([]interface{}, er
 }
 
 func DeleteTable(w http.ResponseWriter, r *http.Request) {
-	tableName := strings.Split(r.URL.Path, "/")[2]
+	vars := mux.Vars(r)
+
+	tableName := vars["table_name"]
 
 	_, err := db.DB.Exec(fmt.Sprintf("DROP TABLE IF EXISTS \"%v\";", tableName))
 

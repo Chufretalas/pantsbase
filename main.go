@@ -7,10 +7,10 @@ import (
 	"os/exec"
 	"regexp"
 	"runtime"
+	"slices"
 
 	"github.com/Chufretalas/pantsbase/db"
 	"github.com/Chufretalas/pantsbase/routes"
-	"golang.org/x/exp/slices"
 )
 
 func main() {

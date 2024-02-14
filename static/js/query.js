@@ -29,10 +29,14 @@ async function query() {
         }
     )
     const resp = await rawResp.json()
-    if (resp && resp.length > 0) {
+
+    console.log(resp)
+    if (resp) {
 
         queryHead.innerHTML = ""
         queryBody.innerHTML = ""
+
+        if (resp.length === 0) { return }
 
         let columns = Object.keys(resp[0])
 
@@ -58,9 +62,7 @@ async function query() {
                     deleteButton.innerText = "X"
                     deleteButton.addEventListener("click", async (e) => {
                         e.preventDefault() //TODO: add a confirm alert?
-                        let url = "/delete_one?"
-                        url += "table_name=" + tableName.replaceAll(" ", "%20")
-                        url += `&id=${id}`
+                        let url = `/api/delete_one/${tableName.replaceAll(" ", "%20")}/${id}`
                         const rawResp = await fetch(url, { method: "DELETE" })
                         if (rawResp.status === 200) {
                             query()
