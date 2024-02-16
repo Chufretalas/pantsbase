@@ -24,7 +24,7 @@
             <!-- -------------------------------------------------- New Row (and update) -------------------------------------------------- -->
             <section class="new_row">
                 <h2 id="row_form_title">New Row</h2>
-                <form action="new_row" method="POST" class="new_row_form" id="new_row_form">
+                <form action="/form_handlers/new_row" method="POST" class="new_row_form" id="new_row_form">
                     <div class="new_row_fields">
                         {{if .Schema}}
                         {{range .Schema}}
@@ -110,7 +110,7 @@
                 <form method="dialog" id="update_dialog_close_form">
                     <button id="close_update_dialog_button">X</button>
                 </form>
-                <form action="update_row" method="POST" class="new_row_form" id="update_row_form">
+                <form action="/form_handlers/update_row" method="POST" class="new_row_form" id="update_row_form">
                     <div class="new_row_fields">
                         {{if .Schema}}
                         {{range .Schema}}

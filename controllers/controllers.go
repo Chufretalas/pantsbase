@@ -23,7 +23,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 // TODO: disallow non-ASCII characters on table columns
 func NewTable(w http.ResponseWriter, r *http.Request) {
-	tableName := r.FormValue("name")
+	tableName := strings.Trim(r.FormValue("name"), " ")
 
 	var columnIndexes []string
 	if r.FormValue("column_indexes") == "" {
@@ -34,7 +34,7 @@ func NewTable(w http.ResponseWriter, r *http.Request) {
 
 	columns := make([]m.Column, 0, len(columnIndexes))
 	for _, index := range columnIndexes {
-		name := r.FormValue(fmt.Sprintf("n%v", index))
+		name := strings.Trim(r.FormValue(fmt.Sprintf("n%v", index)), " ")
 		typeDB := r.FormValue(fmt.Sprintf("t%v", index))
 		columns = append(columns, m.Column{Name: name, TypeDB: typeDB})
 	}
