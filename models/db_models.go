@@ -1,8 +1,8 @@
 package models
 
 type Column struct {
-	Name   string
-	TypeDB string
+	Name   string `json:"name"`
+	TypeDB string `json:"type"`
 }
 
 type Table struct {

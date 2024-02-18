@@ -8,16 +8,17 @@ import (
 	"strconv"
 
 	"github.com/Chufretalas/pantsbase/db"
+	"github.com/Chufretalas/pantsbase/models"
 	"github.com/gorilla/mux"
 )
 
 func Query(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	decoder := json.NewDecoder(r.Body)
 	var t map[string]interface{}
 	err := decoder.Decode(&t)
 	if err != nil {
 		fmt.Println("error decoding the body\n", err)
-		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]string{"error": "the body was not valid json"})
 		return
@@ -34,7 +35,6 @@ func Query(w http.ResponseWriter, r *http.Request) {
 	limit, err := strconv.Atoi(fmt.Sprintf("%v", limitStr))
 	if err != nil {
 		fmt.Println(err)
-		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]string{"error": `value for 'limit' was not a valid number`})
 		return
@@ -46,13 +46,11 @@ func Query(w http.ResponseWriter, r *http.Request) {
 	data, err := db.Query(tableName, limit, orderBy, orderDirec)
 	if err != nil {
 		fmt.Println(err)
-		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode([]interface{}{})
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(data)
 }
@@ -86,3 +84,30 @@ func DeleteTable(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 }
+
+// TODO: add parameters to just return the table names
+func Tables(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	allNames := db.GetAllTableNames()
+	resp := make([]models.TableResponse, 0, len(allNames))
+	for _, name := range allNames {
+		schema, err := db.GetSchema(name)
+		if err != nil {
+			fmt.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode([]interface{}{})
+			return
+		}
+		columns := make([]models.Column, 0, len(schema))
+		columns = append(columns, models.Column{Name: "id", TypeDB: "INTEGER"})
+		for _, c := range schema {
+			columns = append(columns, models.Column{Name: c.ColName, TypeDB: c.Type})
+		}
+		resp = append(resp, models.TableResponse{TableName: name, Columns: columns})
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(resp)
+}
+
+// TODO: update row

@@ -9,7 +9,6 @@ import (
 
 var Router *mux.Router
 
-// TODO: make the api more consistent, like making delete_one be delete_one/{table_name}/{id}
 func LoadRoutes() {
 	Router = mux.NewRouter()
 	Router.HandleFunc("/", controllers.Index)
@@ -17,6 +16,7 @@ func LoadRoutes() {
 	Router.HandleFunc("/form_handlers/new_table", controllers.NewTable).Methods("POST")
 	Router.HandleFunc("/form_handlers/new_row", controllers.NewRow).Methods("POST")
 	Router.HandleFunc("/form_handlers/update_row", controllers.UpdateRow).Methods("POST")
+	Router.HandleFunc("/api/tables", controllers.Tables).Methods("GET")
 	Router.HandleFunc("/api/query/{table_name}", controllers.Query).Methods("POST")
 	Router.HandleFunc("/api/delete_one/{table_name}/{id}", controllers.DeleteOne).Methods("DELETE")
 	Router.HandleFunc("/api/delete_table/{table_name}", controllers.DeleteTable).Methods("DELETE")

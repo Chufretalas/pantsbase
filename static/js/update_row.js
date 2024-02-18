@@ -29,5 +29,3 @@ export function openUpdateDialog(rowData) {
     idInput.value = rowData.id
     updateDialog.showModal()
 }
-
-//TODO: finish the form and make an endpoint in /update_row to receive the resquest
