@@ -85,10 +85,17 @@ func DeleteTable(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// TODO: add parameters to just return the table names
 func Tables(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
+	onlyNames := r.URL.Query().Has("only_names")
 	allNames := db.GetAllTableNames()
+
+	if onlyNames {
+		json.NewEncoder(w).Encode(allNames)
+		return
+	}
+
 	resp := make([]models.TableResponse, 0, len(allNames))
 	for _, name := range allNames {
 		schema, err := db.GetSchema(name)
