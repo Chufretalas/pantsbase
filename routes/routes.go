@@ -1,12 +1,14 @@
 package routes
 
 import (
+	"io/fs"
 	"net/http"
 
 	"github.com/Chufretalas/pantsbase/controllers"
 	"github.com/gorilla/mux"
 )
 
+var StaticFS fs.FS
 var Router *mux.Router
 
 func LoadRoutes() {
@@ -20,6 +22,6 @@ func LoadRoutes() {
 	Router.HandleFunc("/api/query/{table_name}", controllers.Query).Methods("POST")
 	Router.HandleFunc("/api/delete_one/{table_name}/{id}", controllers.DeleteOne).Methods("DELETE")
 	Router.HandleFunc("/api/delete_table/{table_name}", controllers.DeleteTable).Methods("DELETE")
-	Router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static")))) // I love you gorilla mux ❤
+	Router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.FS(StaticFS)))) // I love you gorilla mux ❤
 	http.Handle("/", Router)
 }

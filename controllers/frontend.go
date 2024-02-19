@@ -9,10 +9,10 @@ import (
 	"github.com/Chufretalas/pantsbase/db"
 )
 
-var temp = template.Must(template.ParseGlob("templates/*.html"))
+var Temps *template.Template
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	temp.ExecuteTemplate(w, "index", db.GetAllTableNames())
+	Temps.ExecuteTemplate(w, "index", db.GetAllTableNames())
 }
 
 func TableView(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +27,7 @@ func TableView(w http.ResponseWriter, r *http.Request) {
 		allIds = append(allIds, schema.Id)
 	}
 
-	temp.ExecuteTemplate(w, "table_view", map[string]interface{}{
+	Temps.ExecuteTemplate(w, "table_view", map[string]interface{}{
 		"Schema":         colsSchemas,
 		"HiddenInputIds": strings.Join(allIds, " "),
 		"TableName":      r.URL.Query().Get("name"),
