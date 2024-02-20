@@ -13,18 +13,12 @@ const params = new URLSearchParams(window.location.search)
 const tableName = params.get("name")
 
 async function query() {
-    const rawResp = await fetch(`/api/query/${tableName}`,
+    const rawResp = await fetch(`/api/tables/${tableName}?limit=${limit.value < 0 ? 0 : limit.value}&order_by=${orderBy.value}&order_direction=${orderDirec.value}`,
         {
-            method: "POST",
+            method: "GET",
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                limit: limit.value < 0 ? 0 : limit.value,
-                orderBy: orderBy.value,
-                orderDirec: orderDirec.value
-            })
+                'Accept': 'application/json'
+            }
         }
     )
     const resp = await rawResp.json()
@@ -61,7 +55,7 @@ async function query() {
                     deleteButton.innerText = "X"
                     deleteButton.addEventListener("click", async (e) => {
                         e.preventDefault() //TODO: add a confirm alert?
-                        let url = `/api/delete_one/${tableName.replaceAll(" ", "%20")}/${id}`
+                        let url = `/api/tables/${tableName}/${id}`
                         const rawResp = await fetch(url, { method: "DELETE" })
                         if (rawResp.status === 200) {
                             query()

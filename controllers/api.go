@@ -14,40 +14,51 @@ import (
 
 func Query(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	decoder := json.NewDecoder(r.Body)
-	var t map[string]interface{}
-	err := decoder.Decode(&t)
-	if err != nil {
-		fmt.Println("error decoding the body\n", err)
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]string{"error": "the body was not valid json"})
-		return
-	}
 
 	tableName := mux.Vars(r)["table_name"]
 
-	limitStr := fmt.Sprintf("%v", t["limit"])
+	limitStr := r.URL.Query().Get("limit")
 
-	if limitStr == "<nil>" {
-		limitStr = "50"
-	}
+	orderBy := r.URL.Query().Get("order_by")
+	orderDirection := r.URL.Query().Get("order_direction") // Needs to be "ASC" or "DESC"
 
 	limit, err := strconv.Atoi(fmt.Sprintf("%v", limitStr))
-	if err != nil {
+	if err != nil && limitStr != "" {
 		fmt.Println(err)
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]string{"error": `value for 'limit' was not a valid number`})
+		http.Error(w, `value for 'limit' was not a valid number`, http.StatusBadRequest)
 		return
 	}
 
-	orderBy := fmt.Sprintf("%v", t["orderBy"])
-	orderDirec := fmt.Sprintf("%v", t["orderDirec"])
-
-	data, err := db.Query(tableName, limit, orderBy, orderDirec)
+	data, err := db.Query(tableName, limit, orderBy, orderDirection)
 	if err != nil {
 		fmt.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode([]interface{}{})
+		http.Error(w, "could not retrieve the requested data", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(data)
+}
+
+func QueryOne(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	vars := mux.Vars(r)
+
+	tableName := vars["table_name"]
+	idStr := vars["id"]
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, `id was not a valid number`, http.StatusBadRequest)
+		return
+	}
+
+	data, err := db.QueryOne(tableName, id)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "could not retrieve the requested data", http.StatusInternalServerError)
 		return
 	}
 
@@ -117,4 +128,65 @@ func Tables(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
-// TODO: update row
+func UpdateOne(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	vars := mux.Vars(r)
+
+	tableName := vars["table_name"]
+
+	schema, err := db.GetSchema(tableName)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "invalid table name", http.StatusBadRequest)
+		return
+	}
+
+	id, err := strconv.Atoi(vars["id"])
+
+	if err != nil {
+		fmt.Println(err.Error())
+		http.Error(w, "The id is not a valid integer", http.StatusBadRequest)
+		return
+	}
+
+	decoder := json.NewDecoder(r.Body)
+	var body map[string]interface{}
+	err = decoder.Decode(&body)
+	if err != nil {
+		fmt.Println("error decoding the body\n", err)
+		http.Error(w, "the body was not valid json", http.StatusBadRequest)
+		return
+	}
+
+	// TODO: validate that number fields are actually numbers maybe in the db.UpdateRow, but it might not be necessary
+	// parsing the request body for the table fields
+	values := make([]any, 0, len(schema))
+	for _, column := range schema {
+		newValue := body[column.ColName]
+		values = append(values, newValue)
+	}
+
+	err = db.UpdateRow(tableName, values, fmt.Sprint(id))
+
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "could not update the requested row", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	changedRow, err := db.QueryOne(tableName, id)
+
+	if err != nil {
+		fmt.Println(err)
+		json.NewEncoder(w).Encode(map[string]any{"message": "could not retrieve the changed row, but it was updated correctly"})
+	} else {
+		json.NewEncoder(w).Encode(changedRow)
+	}
+
+}
+
+// TODO: post (many and one should be the same endpoint)
+// TODO: update many

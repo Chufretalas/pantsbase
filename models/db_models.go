@@ -10,6 +10,7 @@ type Table struct {
 	Columns []Column
 }
 
+// TODO: shcmea should actually be a []Column, but it maight be too hard to fix now, maybe one day
 type Schema struct {
 	ColName string
 	Type    string
