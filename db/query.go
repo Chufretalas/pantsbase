@@ -4,7 +4,6 @@ import (
 	"fmt"
 )
 
-// TODO: if limit <= 0 then there's no limit
 // Leave orderBy empty if you don't want sorting | orderDirection should be "ASC" or "DESC", default is DESC
 func Query(tableName string, limit int, orderBy string, orderDirection string) ([]map[string]interface{}, error) {
 
@@ -27,16 +26,16 @@ func Query(tableName string, limit int, orderBy string, orderDirection string) (
 		orderDirection = "DESC"
 	}
 
-	if limit <= 0 {
-		limit = 1
-	}
-
 	var queryString string
 
 	if willOrder {
-		queryString = fmt.Sprintf(`SELECT * FROM "%v" ORDER BY "%v" %v LIMIT %v`, tableName, orderBy, orderDirection, limit)
+		queryString = fmt.Sprintf(`SELECT * FROM "%v" ORDER BY "%v" %v`, tableName, orderBy, orderDirection)
 	} else {
-		queryString = fmt.Sprintf(`SELECT * FROM "%v" LIMIT %v`, tableName, limit)
+		queryString = fmt.Sprintf(`SELECT * FROM "%v"`, tableName)
+	}
+
+	if limit > 0 {
+		queryString += fmt.Sprintf(` LIMIT %v`, limit)
 	}
 
 	return queryAndReadData(queryString)
