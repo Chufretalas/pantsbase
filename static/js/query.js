@@ -29,7 +29,14 @@ async function query() {
         queryHead.innerHTML = ""
         queryBody.innerHTML = ""
 
-        if (resp.length === 0) { return }
+        if (resp.length === 0) {
+            queryBody.innerHTML = `
+            <div id="table_is_empty_warning">
+            🐻 This table is empty! 🫎
+            </div>
+            `
+            return
+        }
 
         let columns = Object.keys(resp[0])
 

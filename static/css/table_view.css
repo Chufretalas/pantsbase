@@ -151,6 +151,10 @@ button {
     border: 1px solid white;
 }
 
+.query_results:has(div#table_is_empty_warning) {
+    width: inherit;
+}
+
 .query_id_td {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
@@ -172,6 +176,15 @@ button {
     height: 80%;
     display: flex;
     justify-content: center;
+}
+
+#table_is_empty_warning {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bolder;
+    height: 5rem;
 }
 
 /* Update dialog */
