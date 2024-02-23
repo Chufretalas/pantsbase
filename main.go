@@ -79,4 +79,3 @@ func openBrowser() {
 }
 
 //TODO: investigate everywhere that checks for a "<nil>" string, because if might be able to be changed to just nil, I think this happens when you convert nil to a string
-//TODO: change all interface{} to any, if possible

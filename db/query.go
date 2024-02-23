@@ -5,7 +5,7 @@ import (
 )
 
 // Leave orderBy empty if you don't want sorting | orderDirection should be "ASC" or "DESC", default is DESC
-func Query(tableName string, limit int, orderBy string, orderDirection string) ([]map[string]interface{}, error) {
+func Query(tableName string, limit int, orderBy string, orderDirection string) ([]map[string]any, error) {
 
 	schema, err := GetSchema(tableName)
 	if err != nil {
@@ -41,14 +41,14 @@ func Query(tableName string, limit int, orderBy string, orderDirection string) (
 	return queryAndReadData(queryString)
 }
 
-// TODO: change this to map[string]interface{} instead of an slice
-func QueryOne(tableName string, id int) ([]map[string]interface{}, error) {
+// TODO: change this to map[string]any instead of an slice
+func QueryOne(tableName string, id int) ([]map[string]any, error) {
 	queryString := fmt.Sprintf(`SELECT * FROM "%v" WHERE id="%v";`, tableName, id)
 
 	return queryAndReadData(queryString)
 }
 
-func queryAndReadData(queryString string) ([]map[string]interface{}, error) {
+func queryAndReadData(queryString string) ([]map[string]any, error) {
 	rows, err := DB.Query(queryString)
 	if err != nil {
 		fmt.Println(err)
@@ -62,13 +62,13 @@ func queryAndReadData(queryString string) ([]map[string]interface{}, error) {
 	}
 
 	count := len(columns)
-	values := make([]interface{}, count)
-	scanArgs := make([]interface{}, count)
+	values := make([]any, count)
+	scanArgs := make([]any, count)
 	for i := range values {
 		scanArgs[i] = &values[i]
 	}
 
-	masterData := make([]map[string]interface{}, 0)
+	masterData := make([]map[string]any, 0)
 
 	for rows.Next() {
 		err := rows.Scan(scanArgs...)
@@ -77,7 +77,7 @@ func queryAndReadData(queryString string) ([]map[string]interface{}, error) {
 			return nil, err
 		}
 
-		entrie := make(map[string]interface{})
+		entrie := make(map[string]any)
 
 		for i, v := range values {
 			entrie[columns[i]] = v

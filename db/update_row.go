@@ -4,7 +4,7 @@ import "fmt"
 
 // the values need to be in the order as they appear in the db.GetSchema function
 // values with nil will be ignored
-func UpdateRow(tableName string, values []interface{}, rowId string) error {
+func UpdateRow(tableName string, values []any, rowId string) error {
 	cols, err := GetSchema(tableName)
 	if err != nil {
 		fmt.Println(err)

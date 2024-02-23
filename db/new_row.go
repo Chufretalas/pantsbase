@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func NewRow(tableName string, values []interface{}) {
+func NewRow(tableName string, values []any) {
 	cols, err := GetSchema(tableName)
 	if err != nil {
 		fmt.Println(err)

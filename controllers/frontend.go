@@ -27,7 +27,7 @@ func TableView(w http.ResponseWriter, r *http.Request) {
 		allIds = append(allIds, schema.Id)
 	}
 
-	Temps.ExecuteTemplate(w, "table_view", map[string]interface{}{
+	Temps.ExecuteTemplate(w, "table_view", map[string]any{
 		"Schema":         colsSchemas,
 		"HiddenInputIds": strings.Join(allIds, " "),
 		"TableName":      r.URL.Query().Get("name"),

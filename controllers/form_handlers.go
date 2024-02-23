@@ -14,9 +14,9 @@ import (
 
 // utils
 
-func extractRowFormValues(r *http.Request, fieldIds []string) ([]interface{}, error) {
+func extractRowFormValues(r *http.Request, fieldIds []string) ([]any, error) {
 	failed := false
-	values := make([]interface{}, 0, len(fieldIds))
+	values := make([]any, 0, len(fieldIds))
 
 	for _, ids := range fieldIds {
 		valueRaw := r.FormValue(ids)

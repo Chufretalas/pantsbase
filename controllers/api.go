@@ -113,7 +113,7 @@ func Tables(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode([]interface{}{})
+			json.NewEncoder(w).Encode([]any{})
 			return
 		}
 		columns := make([]models.Column, 0, len(schema))
@@ -151,7 +151,7 @@ func UpdateOne(w http.ResponseWriter, r *http.Request) {
 	}
 
 	decoder := json.NewDecoder(r.Body)
-	var body map[string]interface{}
+	var body map[string]any
 	err = decoder.Decode(&body)
 	if err != nil {
 		fmt.Println("error decoding the body\n", err)
