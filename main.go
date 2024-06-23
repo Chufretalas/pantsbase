@@ -50,14 +50,15 @@ func main() {
 	db.ConnectDB()
 	defer db.DB.Close()
 
-	routes.LoadRoutes()
+	router := http.NewServeMux()
+	routes.LoadRoutes(router)
 	fmt.Println("Listening on http://localhost:8000")
 
 	if slices.Contains(os.Args, "--open") {
 		openBrowser()
 	}
 
-	http.ListenAndServe(":8000", routes.Router)
+	http.ListenAndServe(":8000", router)
 }
 
 func openBrowser() {

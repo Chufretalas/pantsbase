@@ -9,13 +9,12 @@ import (
 
 	"github.com/Chufretalas/pantsbase/db"
 	"github.com/Chufretalas/pantsbase/models"
-	"github.com/gorilla/mux"
 )
 
 func Query(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	tableName := mux.Vars(r)["table_name"]
+	tableName := r.PathValue("table_name")
 
 	limitStr := r.URL.Query().Get("limit")
 
@@ -43,12 +42,9 @@ func Query(w http.ResponseWriter, r *http.Request) {
 func QueryOne(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	vars := mux.Vars(r)
+	tableName := r.PathValue("table_name")
 
-	tableName := vars["table_name"]
-	idStr := vars["id"]
-
-	id, err := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, `id was not a valid number`, http.StatusBadRequest)
@@ -67,10 +63,9 @@ func QueryOne(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteOne(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
 
-	table_name := vars["table_name"]
-	id, err := strconv.Atoi(vars["id"])
+	table_name := r.PathValue("table_name")
+	id, err := strconv.Atoi(r.PathValue("id"))
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -85,9 +80,8 @@ func DeleteOne(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteTable(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
 
-	tableName := vars["table_name"]
+	tableName := r.PathValue("table_name")
 
 	_, err := db.DB.Exec(fmt.Sprintf("DROP TABLE IF EXISTS \"%v\";", tableName))
 
@@ -131,9 +125,7 @@ func Tables(w http.ResponseWriter, r *http.Request) {
 func UpdateOne(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	vars := mux.Vars(r)
-
-	tableName := vars["table_name"]
+	tableName := r.PathValue("table_name")
 
 	schema, err := db.GetSchema(tableName)
 	if err != nil {
@@ -142,7 +134,7 @@ func UpdateOne(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := strconv.Atoi(vars["id"])
+	id, err := strconv.Atoi(r.PathValue("id"))
 
 	if err != nil {
 		fmt.Println(err.Error())

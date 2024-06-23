@@ -108,5 +108,3 @@ queryButton.addEventListener("click", async (e) => {
     e.preventDefault()
     query()
 })
-
-export const TESTE = "aaaaaa"
