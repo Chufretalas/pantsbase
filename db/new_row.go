@@ -10,7 +10,7 @@ func NewRow(tableName string, values []any) {
 		fmt.Println(err)
 	}
 
-	queryStr := fmt.Sprintf("INSERT INTO %v (", "\""+tableName+"\"")
+	queryStr := fmt.Sprintf("INSERT INTO \"%v\" (", tableName)
 	for idx, col := range cols {
 		if idx != len(cols)-1 {
 			queryStr += "\"" + col.ColName + "\", "

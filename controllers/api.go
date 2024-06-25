@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -178,6 +180,42 @@ func UpdateOne(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(changedRow)
 	}
 
+}
+
+func PostRows(w http.ResponseWriter, r *http.Request) {
+
+	tableName := r.PathValue("table_name")
+
+	// duplicating the request body so it can be decoded twice
+	var buf bytes.Buffer
+	tee := io.TeeReader(r.Body, &buf)
+	decoder1 := json.NewDecoder(tee)
+	decoder2 := json.NewDecoder(&buf)
+
+	// this handler can receive both only one row as well as multiple
+	var simple_body map[string]any
+	var multi_body []map[string]any
+	simple_body_err := decoder1.Decode(&simple_body)
+	multi_body_err := decoder2.Decode(&multi_body)
+	if simple_body_err != nil && multi_body_err != nil {
+		fmt.Println("error decoding the body\n", simple_body_err, multi_body_err)
+		http.Error(w, "the body was not valid json", http.StatusBadRequest)
+		return
+	}
+
+	fmt.Printf("simple_body: %v\n", simple_body)
+	fmt.Printf("multi_body: %v\n", multi_body)
+
+	var dbErr error
+	if simple_body_err != nil {
+		dbErr = db.NewRows(tableName, multi_body)
+	} else {
+		dbErr = db.NewRows(tableName, []map[string]any{simple_body})
+	}
+	if dbErr != nil {
+		fmt.Println(dbErr)
+		http.Error(w, "somenthing went wrong while saving the new data", http.StatusBadRequest)
+	}
 }
 
 // TODO: post (many and one should be the same endpoint)

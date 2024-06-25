@@ -23,6 +23,7 @@ func LoadRoutes(router *http.ServeMux) {
 
 	router.HandleFunc("GET /api/tables/{table_name}", controllers.Query)
 	router.HandleFunc("GET /api/tables/{table_name}/{id}", controllers.QueryOne)
+	router.HandleFunc("POST /api/tables/{table_name}", controllers.PostRows)
 	router.HandleFunc("DELETE /api/tables/{table_name}/{id}", controllers.DeleteOne)
 	router.HandleFunc("PUT /api/tables/{table_name}/{id}", controllers.UpdateOne)
 	router.HandleFunc("PATCH /api/tables/{table_name}/{id}", controllers.UpdateOne)

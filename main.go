@@ -78,5 +78,3 @@ func openBrowser() {
 	args = append(args, "http://localhost:8000/")
 	exec.Command(cmd, args...).Start()
 }
-
-//TODO: investigate everywhere that checks for a "<nil>" string, because if might be able to be changed to just nil, I think this happens when you convert nil to a string

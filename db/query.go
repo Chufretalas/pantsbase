@@ -41,7 +41,6 @@ func Query(tableName string, limit int, orderBy string, orderDirection string) (
 	return queryAndReadData(queryString)
 }
 
-// TODO: change this to map[string]any instead of an slice
 func QueryOne(tableName string, id int) ([]map[string]any, error) {
 	queryString := fmt.Sprintf(`SELECT * FROM "%v" WHERE id="%v";`, tableName, id)
 
