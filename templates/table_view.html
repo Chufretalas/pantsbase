@@ -110,7 +110,7 @@
                 <form method="dialog" id="update_dialog_close_form">
                     <button id="close_update_dialog_button">X</button>
                 </form>
-                <form action="/form_handlers/update_row" method="POST" class="new_row_form" id="update_row_form">
+                <form class="new_row_form" id="update_row_form">
                     <div class="new_row_fields">
                         {{if .Schema}}
                         {{range .Schema}}
@@ -137,9 +137,9 @@
                         {{else}}
                         <span>no rows other than id</span>
                         {{end}}
-                        <input type="hidden" name="update_row_id" id="update_row_id">
                     </div>
                 </form>
+                <input type="hidden" name="update_row_id" id="update_row_id">
                 <button id="update_button" type="submit" form="update_row_form">Update!</button>
             </dialog>
         </main>
@@ -150,6 +150,8 @@
     </body>
 
     <script>
+        const updateDialog = document.getElementById("update_dialog")
+
         const deleteTableButton = document.getElementById("delete_table_button")
 
         deleteTableButton.addEventListener("click", async (e) => {
@@ -165,31 +167,45 @@
         const schema = JSON.parse(document.getElementById("schema").value)
         const tableName = document.getElementById("table_name").value
 
-        console.log({ schema, tableName })
-
         const newRowForm = document.getElementById("new_row_form")
+        const updateRowForm = document.getElementById("update_row_form")
 
-        newRowForm.addEventListener("submit", async (e) => {
+        async function submitRowHandler(e, newOrUpdate) {
             e.preventDefault()
             const rowObj = new Object()
             const data = new FormData(e.target)
             data.forEach((v, k) => {
+                console.log(k)
                 rowObj[schema.find(col => col.InputName === k).ColName] = k[0] === "t" ? v : +v
             })
             console.log({ rowObj })
+
+            let updateId
+            if (newOrUpdate === "update") {
+                updateId = document.getElementById("update_row_id").value
+            }
+
             if (rowObj) {
-                const resp = await fetch(`/api/tables/${tableName}`, {
-                    method: "POST",
+                const url = newOrUpdate === "update" ? `/api/tables/${tableName}/${updateId}` : `/api/tables/${tableName}`
+                const resp = await fetch(url, {
+                    method: newOrUpdate === "update" ? "PUT" : "POST",
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(rowObj)
                 })
                 if (resp.status === 200) {
+                    if (newOrUpdate === "update") {
+                        updateDialog.close()
+                        //TODO: query back that one row that was updated, maybe with a returning id from the resp or simply the whole row returned
+                    }
                     e.target.reset()
                 }
             }
-        })
+        }
+
+        newRowForm.addEventListener("submit", (e) => submitRowHandler(e, "new"))
+        updateRowForm.addEventListener("submit", (e) => submitRowHandler(e, "update"))
     </script>
 
 </html>

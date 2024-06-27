@@ -37,6 +37,8 @@ func Query(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Printf("data: %v\n", data)
+
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(data)
 }
@@ -128,14 +130,6 @@ func UpdateOne(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	tableName := r.PathValue("table_name")
-
-	schema, err := db.GetSchema(tableName)
-	if err != nil {
-		fmt.Println(err)
-		http.Error(w, "invalid table name", http.StatusBadRequest)
-		return
-	}
-
 	id, err := strconv.Atoi(r.PathValue("id"))
 
 	if err != nil {
@@ -153,15 +147,7 @@ func UpdateOne(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: validate that number fields are actually numbers maybe in the db.UpdateRow, but it might not be necessary
-	// parsing the request body for the table fields
-	values := make([]any, 0, len(schema))
-	for _, column := range schema {
-		newValue := body[column.ColName]
-		values = append(values, newValue)
-	}
-
-	err = db.UpdateRow(tableName, values, fmt.Sprint(id))
+	err = db.UpdateRow(tableName, body, fmt.Sprint(id))
 
 	if err != nil {
 		fmt.Println(err)
@@ -175,7 +161,7 @@ func UpdateOne(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		fmt.Println(err)
-		json.NewEncoder(w).Encode(map[string]any{"message": "could not retrieve the changed row, but it was updated correctly"})
+		json.NewEncoder(w).Encode(map[string]any{"message": "could not retrieve the updated row, but it was updated correctly"})
 	} else {
 		json.NewEncoder(w).Encode(changedRow)
 	}
@@ -202,9 +188,6 @@ func PostRows(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "the body was not valid json", http.StatusBadRequest)
 		return
 	}
-
-	fmt.Printf("simple_body: %v\n", simple_body)
-	fmt.Printf("multi_body: %v\n", multi_body)
 
 	var dbErr error
 	var ids []int

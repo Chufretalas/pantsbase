@@ -12,7 +12,7 @@ const queryBody = document.querySelector("#query_results_body")
 const params = new URLSearchParams(window.location.search)
 const tableName = params.get("name")
 
-async function query() {
+export async function query() {
     const rawResp = await fetch(`/api/tables/${tableName}?limit=${limit.value < 0 ? 0 : limit.value}&order_by=${orderBy.value}&order_direction=${orderDirec.value}`,
         {
             method: "GET",
@@ -23,7 +23,6 @@ async function query() {
     )
     const resp = await rawResp.json()
 
-    console.log(resp)
     if (resp) {
 
         queryHead.innerHTML = ""
