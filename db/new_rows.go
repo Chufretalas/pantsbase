@@ -4,17 +4,19 @@ import (
 	"fmt"
 )
 
-// TODO: make something to add default zero values instead of returning an error on nil values
-// TODO: do something when the type of the received value does not match the column type
-func NewRows(tableName string, rows []map[string]any) error {
+// TODO: make this safer with ?'s to avoid SQL injections (args...)
+// TODO: return errors in more cases of an error happening here
+// inserts new data into the table and returns the ids of the new rows
+func NewRows(tableName string, rows []map[string]any) ([]int, error) {
 
 	if len(rows) == 0 {
-		return nil
+		return []int{}, nil
 	}
 
 	cols, err := GetSchema(tableName)
 	if err != nil {
 		fmt.Println(err)
+
 	}
 
 	queryStr := fmt.Sprintf("INSERT INTO \"%v\" (", tableName)
@@ -30,14 +32,20 @@ func NewRows(tableName string, rows []map[string]any) error {
 		queryStr += "("
 		for idx, col := range cols {
 			value, ok := row[col.ColName]
-			if !ok || value == nil {
-				return fmt.Errorf("missing column from a row of column value is null. row index: %v, column name: %v", rowIdx, col.ColName)
+			if !ok {
+				return []int{}, fmt.Errorf("missing column from a row. row index: %v, column name: %v", rowIdx, col.ColName)
 			}
 
-			if col.Type == "TEXT" {
-				queryStr += fmt.Sprintf("'%v'", value)
+			value = SanitizeValue(value, col.Type)
+
+			if value == nil {
+				queryStr += "NULL"
 			} else {
-				queryStr += fmt.Sprintf("%v", value)
+				if col.Type == "TEXT" {
+					queryStr += fmt.Sprintf("'%v'", value)
+				} else {
+					queryStr += fmt.Sprintf("%v", value)
+				}
 			}
 
 			if idx != len(cols)-1 {
@@ -48,17 +56,25 @@ func NewRows(tableName string, rows []map[string]any) error {
 		if rowIdx != len(rows)-1 {
 			queryStr += ","
 		} else {
-			queryStr += ";"
+			queryStr += " RETURNING id;"
 		}
 	}
 
 	fmt.Printf("queryStr: %v\n", queryStr)
-	_, err = DB.Exec(queryStr)
 
+	var ids []int
+	returned_rows, err := DB.Query(queryStr)
 	if err != nil {
 		fmt.Println(err)
-		return err
 	}
+	for returned_rows.Next() {
+		var id int
+		if err := returned_rows.Scan(&id); err != nil {
+			fmt.Println(err)
+		}
+		ids = append(ids, id)
+	}
+	fmt.Println("IDs: ", ids)
 
-	return nil
+	return ids, nil
 }

@@ -207,16 +207,18 @@ func PostRows(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("multi_body: %v\n", multi_body)
 
 	var dbErr error
+	var ids []int
 	if simple_body_err != nil {
-		dbErr = db.NewRows(tableName, multi_body)
+		ids, dbErr = db.NewRows(tableName, multi_body)
 	} else {
-		dbErr = db.NewRows(tableName, []map[string]any{simple_body})
+		ids, dbErr = db.NewRows(tableName, []map[string]any{simple_body})
 	}
 	if dbErr != nil {
 		fmt.Println(dbErr)
-		http.Error(w, "somenthing went wrong while saving the new data", http.StatusBadRequest)
+		http.Error(w, "somenthing went wrong while saving the new data", http.StatusInternalServerError)
 	}
+
+	json.NewEncoder(w).Encode(map[string]any{"ids": ids})
 }
 
-// TODO: post (many and one should be the same endpoint)
 // TODO: update many
