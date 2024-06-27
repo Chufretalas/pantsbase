@@ -51,7 +51,7 @@ func GetSchema(tableName string) ([]models.Schema, error) {
 				id = fmt.Sprintf("t%v", i)
 
 			}
-			parsedCols = append(parsedCols, models.Schema{ColName: name, Type: colType, Id: id})
+			parsedCols = append(parsedCols, models.Schema{ColName: name, Type: colType, InputName: id})
 		}
 	}
 

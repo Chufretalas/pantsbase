@@ -1,10 +1,10 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"net/http"
-	"strings"
 
 	"github.com/Chufretalas/pantsbase/db"
 )
@@ -22,14 +22,15 @@ func TableView(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	allIds := make([]string, 0, len(colsSchemas))
-	for _, schema := range colsSchemas {
-		allIds = append(allIds, schema.Id)
+	encoded, err := json.Marshal(colsSchemas)
+
+	if err != nil {
+		fmt.Println(err)
 	}
 
 	Temps.ExecuteTemplate(w, "table_view", map[string]any{
-		"Schema":         colsSchemas,
-		"HiddenInputIds": strings.Join(allIds, " "),
-		"TableName":      r.URL.Query().Get("name"),
+		"Schema":     colsSchemas,
+		"JSONSchema": string(encoded),
+		"TableName":  r.URL.Query().Get("name"),
 	})
 }

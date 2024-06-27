@@ -24,33 +24,33 @@
             <!-- -------------------------------------------------- New Row (and update) -------------------------------------------------- -->
             <section class="new_row">
                 <h2 id="row_form_title">New Row</h2>
-                <form action="/form_handlers/new_row" method="POST" class="new_row_form" id="new_row_form">
+                <form class="new_row_form" id="new_row_form">
                     <div class="new_row_fields">
                         {{if .Schema}}
                         {{range .Schema}}
                         {{ if eq .Type "INTEGER"}}
                         <fieldset class="int_input">
-                            <label for="{{.Id}}">🔟 "{{.ColName}}" (INT)</label>
-                            <input type="number" name="{{.Id}}" id="{{.Id}}" pattern="\d*" placeholder="1023" required>
+                            <label for="new_{{.InputName}}">🔟 "{{.ColName}}" (INT)</label>
+                            <input type="number" name="{{.InputName}}" id="new_{{.InputName}}" pattern="\d*"
+                                placeholder="1023" required>
                         </fieldset>
                         {{else if eq .Type "REAL"}}
                         <fieldset class="real_input">
-                            <label for="{{.Id}}">🔢 "{{.ColName}}" (REAL)</label>
-                            <input type="number" name="{{.Id}}" id="{{.Id}}" placeholder="9.621" step="any" required>
+                            <label for="new_{{.InputName}}">🔢 "{{.ColName}}" (REAL)</label>
+                            <input type="number" name="{{.InputName}}" id="new_{{.InputName}}" placeholder="9.621"
+                                step="any" required>
                         </fieldset>
                         {{else}}
                         <fieldset class="text_input">
-                            <label for="{{.Id}}">💬 "{{.ColName}}" (TEXT)</label>
-                            <textarea name="{{.Id}}" id="{{.Id}}" cols="30" rows="10" placeholder="write something..."
-                                required></textarea>
+                            <label for="new_{{.InputName}}">💬 "{{.ColName}}" (TEXT)</label>
+                            <textarea name="{{.InputName}}" id="new_{{.InputName}}" cols="30" rows="10"
+                                placeholder="write something..." required></textarea>
                         </fieldset>
                         {{end}}
                         {{end}}
                         {{else}}
                         <span>no rows other than id</span>
                         {{end}}
-                        <input type="hidden" name="new_row_ids" id="new_row_ids" value="{{.HiddenInputIds}}">
-                        <input type="hidden" name="table_name" id="table_name" value="{{.TableName}}">
                     </div>
                 </form>
 
@@ -116,35 +116,36 @@
                         {{range .Schema}}
                         {{ if eq .Type "INTEGER"}}
                         <fieldset class="int_input">
-                            <label for="{{.Id}}">🔟 "{{.ColName}}" (INT)</label>
-                            <input type="number" name="{{.Id}}" id="{{.Id}}" pattern="\d*" placeholder="1023" required>
+                            <label for="update_{{.InputName}}">🔟 "{{.ColName}}" (INT)</label>
+                            <input type="number" name="{{.InputName}}" id="update_{{.InputName}}" pattern="\d*"
+                                placeholder="1023" required>
                         </fieldset>
                         {{else if eq .Type "REAL"}}
                         <fieldset class="real_input">
-                            <label for="{{.Id}}">🔢 "{{.ColName}}" (REAL)</label>
-                            <input type="number" name="{{.Id}}" id="{{.Id}}" placeholder="9.621" step="any" required>
+                            <label for="update_{{.InputName}}">🔢 "{{.ColName}}" (REAL)</label>
+                            <input type="number" name="{{.InputName}}" id="update_{{.InputName}}" placeholder="9.621"
+                                step="any" required>
                         </fieldset>
                         {{else}}
                         <fieldset class="text_input">
-                            <label for="{{.Id}}">💬 "{{.ColName}}" (TEXT)</label>
-                            <textarea name="{{.Id}}" id="{{.Id}}" cols="30" rows="10" placeholder="write something..."
-                                required></textarea>
+                            <label for="update_{{.InputName}}">💬 "{{.ColName}}" (TEXT)</label>
+                            <textarea name="{{.InputName}}" id="update_{{.InputName}}" cols="30" rows="10"
+                                placeholder="write something..." required></textarea>
                         </fieldset>
                         {{end}}
                         {{end}}
                         {{else}}
                         <span>no rows other than id</span>
                         {{end}}
-                        <input type="hidden" name="update_row_ids" id="update_row_ids" value="{{.HiddenInputIds}}">
-                        <input type="hidden" name="update_table_name" id="update_table_name" value="{{.TableName}}">
                         <input type="hidden" name="update_row_id" id="update_row_id">
                     </div>
                 </form>
                 <button id="update_button" type="submit" form="update_row_form">Update!</button>
             </dialog>
         </main>
+        <input type="hidden" name="table_name" id="table_name" value="{{.TableName}}">
         {{if .Schema}}
-        <input type="hidden" name="schema" id="schema" value="{{.Schema}}">
+        <input type="hidden" name="schema" id="schema" value="{{.JSONSchema}}">
         {{end}}
     </body>
 
@@ -157,6 +158,35 @@
                 const res = await fetch("/api/delete_table/{{.TableName}}", { method: "DELETE" })
                 if (res.status === 200) {
                     window.location.replace("/")
+                }
+            }
+        })
+
+        const schema = JSON.parse(document.getElementById("schema").value)
+        const tableName = document.getElementById("table_name").value
+
+        console.log({ schema, tableName })
+
+        const newRowForm = document.getElementById("new_row_form")
+
+        newRowForm.addEventListener("submit", async (e) => {
+            e.preventDefault()
+            const rowObj = new Object()
+            const data = new FormData(e.target)
+            data.forEach((v, k) => {
+                rowObj[schema.find(col => col.InputName === k).ColName] = k[0] === "t" ? v : +v
+            })
+            console.log({ rowObj })
+            if (rowObj) {
+                const resp = await fetch(`/api/tables/${tableName}`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(rowObj)
+                })
+                if (resp.status === 200) {
+                    e.target.reset()
                 }
             }
         })

@@ -53,20 +53,20 @@ func extractRowFormValues(r *http.Request, fieldIds []string) ([]any, error) {
 
 // end utils
 
-func NewRow(w http.ResponseWriter, r *http.Request) {
+// func NewRow(w http.ResponseWriter, r *http.Request) {
 
-	tableName := r.FormValue("table_name")
-	fieldIds := strings.Split(r.FormValue("new_row_ids"), " ") // it's actually the field names not ids, I'm just dense and I am not changing it now
-	fmt.Println(fieldIds)
+// 	tableName := r.FormValue("table_name")
+// 	fieldIds := strings.Split(r.FormValue("new_row_ids"), " ") // it's actually the field names not ids, I'm just dense and I am not changing it now
+// 	fmt.Println(fieldIds)
 
-	values, err := extractRowFormValues(r, fieldIds)
+// 	values, err := extractRowFormValues(r, fieldIds)
 
-	if err == nil {
-		db.NewRow(tableName, values)
-	}
+// 	if err == nil {
+// 		db.NewRow(tableName, values)
+// 	}
 
-	http.Redirect(w, r, r.Header.Get("Referer"), http.StatusMovedPermanently)
-}
+// 	http.Redirect(w, r, r.Header.Get("Referer"), http.StatusMovedPermanently)
+// }
 
 func UpdateRow(w http.ResponseWriter, r *http.Request) {
 
