@@ -16,20 +16,39 @@ func Index(w http.ResponseWriter, r *http.Request) {
 }
 
 func TableView(w http.ResponseWriter, r *http.Request) {
-	colsSchemas, err := db.GetSchema(r.URL.Query().Get("name"))
+	schema, err := db.GetSchema(r.URL.Query().Get("name"))
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	encoded, err := json.Marshal(colsSchemas)
+	schemaForFrontend := make([]map[string]string, len(schema))
+
+	for idx, col := range schema {
+		schemaForFrontend[idx] = make(map[string]string)
+		schemaForFrontend[idx]["Name"] = col.Name
+		schemaForFrontend[idx]["TypeDB"] = col.TypeDB
+		var inputName string
+		switch col.TypeDB {
+		case "INTEGER":
+			inputName = fmt.Sprintf("i%v", idx)
+		case "REAL":
+			inputName = fmt.Sprintf("r%v", idx)
+		case "TEXT":
+			inputName = fmt.Sprintf("t%v", idx)
+
+		}
+		schemaForFrontend[idx]["InputName"] = inputName
+	}
+
+	encoded, err := json.Marshal(schemaForFrontend)
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	Temps.ExecuteTemplate(w, "table_view", map[string]any{
-		"Schema":     colsSchemas,
+		"Schema":     schemaForFrontend,
 		"JSONSchema": string(encoded),
 		"TableName":  r.URL.Query().Get("name"),
 	})

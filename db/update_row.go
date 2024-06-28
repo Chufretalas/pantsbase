@@ -12,14 +12,14 @@ func UpdateRow(tableName string, values map[string]any, rowId string) error {
 
 	queryStr := fmt.Sprintf("UPDATE %v \n SET ", "\""+tableName+"\"")
 	for idx, col := range cols {
-		value := SanitizeValue(values[col.ColName], col.Type)
+		value := SanitizeValue(values[col.Name], col.TypeDB)
 		if value == nil {
-			queryStr += fmt.Sprintf("\"%v\" = NULL", col.ColName)
+			queryStr += fmt.Sprintf("\"%v\" = NULL", col.Name)
 		} else {
-			if col.Type == "TEXT" {
-				queryStr += fmt.Sprintf("\"%v\" = '%v'", col.ColName, value)
+			if col.TypeDB == "TEXT" {
+				queryStr += fmt.Sprintf("\"%v\" = '%v'", col.Name, value)
 			} else {
-				queryStr += fmt.Sprintf("\"%v\" = %v", col.ColName, value)
+				queryStr += fmt.Sprintf("\"%v\" = %v", col.Name, value)
 			}
 		}
 		if idx != len(cols)-1 {

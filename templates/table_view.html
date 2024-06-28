@@ -28,21 +28,21 @@
                     <div class="new_row_fields">
                         {{if .Schema}}
                         {{range .Schema}}
-                        {{ if eq .Type "INTEGER"}}
+                        {{ if eq .TypeDB "INTEGER"}}
                         <fieldset class="int_input">
-                            <label for="new_{{.InputName}}">🔟 "{{.ColName}}" (INT)</label>
+                            <label for="new_{{.InputName}}">🔟 "{{.Name}}" (INT)</label>
                             <input type="number" name="{{.InputName}}" id="new_{{.InputName}}" pattern="\d*"
                                 placeholder="1023" required>
                         </fieldset>
-                        {{else if eq .Type "REAL"}}
+                        {{else if eq .TypeDB "REAL"}}
                         <fieldset class="real_input">
-                            <label for="new_{{.InputName}}">🔢 "{{.ColName}}" (REAL)</label>
+                            <label for="new_{{.InputName}}">🔢 "{{.Name}}" (REAL)</label>
                             <input type="number" name="{{.InputName}}" id="new_{{.InputName}}" placeholder="9.621"
                                 step="any" required>
                         </fieldset>
                         {{else}}
                         <fieldset class="text_input">
-                            <label for="new_{{.InputName}}">💬 "{{.ColName}}" (TEXT)</label>
+                            <label for="new_{{.InputName}}">💬 "{{.Name}}" (TEXT)</label>
                             <textarea name="{{.InputName}}" id="new_{{.InputName}}" cols="30" rows="10"
                                 placeholder="write something..." required></textarea>
                         </fieldset>
@@ -77,7 +77,7 @@
                             <select name="query_order_by" id="query_order_by">
                                 <option value="NONE 😵" selected>NONE 😵</option>
                                 {{range .Schema}}
-                                <option value="{{.ColName}}">{{.ColName}}</option>
+                                <option value="{{.Name}}">{{.Name}}</option>
                                 {{end}}
                             </select>
                         </fieldset>
@@ -114,21 +114,21 @@
                     <div class="new_row_fields">
                         {{if .Schema}}
                         {{range .Schema}}
-                        {{ if eq .Type "INTEGER"}}
+                        {{ if eq .TypeDB "INTEGER"}}
                         <fieldset class="int_input">
-                            <label for="update_{{.InputName}}">🔟 "{{.ColName}}" (INT)</label>
+                            <label for="update_{{.InputName}}">🔟 "{{.Name}}" (INT)</label>
                             <input type="number" name="{{.InputName}}" id="update_{{.InputName}}" pattern="\d*"
                                 placeholder="1023" required>
                         </fieldset>
-                        {{else if eq .Type "REAL"}}
+                        {{else if eq .TypeDB "REAL"}}
                         <fieldset class="real_input">
-                            <label for="update_{{.InputName}}">🔢 "{{.ColName}}" (REAL)</label>
+                            <label for="update_{{.InputName}}">🔢 "{{.Name}}" (REAL)</label>
                             <input type="number" name="{{.InputName}}" id="update_{{.InputName}}" placeholder="9.621"
                                 step="any" required>
                         </fieldset>
                         {{else}}
                         <fieldset class="text_input">
-                            <label for="update_{{.InputName}}">💬 "{{.ColName}}" (TEXT)</label>
+                            <label for="update_{{.InputName}}">💬 "{{.Name}}" (TEXT)</label>
                             <textarea name="{{.InputName}}" id="update_{{.InputName}}" cols="30" rows="10"
                                 placeholder="write something..." required></textarea>
                         </fieldset>
@@ -176,7 +176,7 @@
             const data = new FormData(e.target)
             data.forEach((v, k) => {
                 console.log(k)
-                rowObj[schema.find(col => col.InputName === k).ColName] = k[0] === "t" ? v : +v
+                rowObj[schema.find(col => col.InputName === k).Name] = k[0] === "t" ? v : +v
             })
             console.log({ rowObj })
 

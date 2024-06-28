@@ -22,26 +22,26 @@ func NewRows(tableName string, rows []map[string]any) ([]int, error) {
 	queryStr := fmt.Sprintf("INSERT INTO \"%v\" (", tableName)
 	for idx, col := range cols {
 		if idx != len(cols)-1 {
-			queryStr += "\"" + col.ColName + "\", "
+			queryStr += "\"" + col.Name + "\", "
 		} else {
-			queryStr += "\"" + col.ColName + "\")\n VALUES "
+			queryStr += "\"" + col.Name + "\")\n VALUES "
 		}
 	}
 
 	for rowIdx, row := range rows {
 		queryStr += "("
 		for idx, col := range cols {
-			value, ok := row[col.ColName]
+			value, ok := row[col.Name]
 			if !ok {
-				return []int{}, fmt.Errorf("missing column from a row. row index: %v, column name: %v", rowIdx, col.ColName)
+				return []int{}, fmt.Errorf("missing column from a row. row index: %v, column name: %v", rowIdx, col.Name)
 			}
 
-			value = SanitizeValue(value, col.Type)
+			value = SanitizeValue(value, col.TypeDB)
 
 			if value == nil {
 				queryStr += "NULL"
 			} else {
-				if col.Type == "TEXT" {
+				if col.TypeDB == "TEXT" {
 					queryStr += fmt.Sprintf("'%v'", value)
 				} else {
 					queryStr += fmt.Sprintf("%v", value)

@@ -16,7 +16,7 @@ func Query(tableName string, limit int, orderBy string, orderDirection string) (
 	willOrder := false
 
 	for _, col := range schema {
-		if orderBy == col.ColName {
+		if orderBy == col.Name {
 			willOrder = true
 			break
 		}

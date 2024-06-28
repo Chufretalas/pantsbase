@@ -10,7 +10,7 @@ import (
 
 var SchemaRegex *regexp.Regexp
 
-func GetSchema(tableName string) ([]models.Schema, error) {
+func GetSchema(tableName string) ([]models.Column, error) {
 	// fmt.Println(tableName)
 
 	stmt, err := DB.Prepare("SELECT sql FROM sqlite_schema WHERE name = ?;")
@@ -26,7 +26,7 @@ func GetSchema(tableName string) ([]models.Schema, error) {
 		return nil, err
 	}
 
-	parsedCols := make([]models.Schema, 0)
+	parsedCols := make([]models.Column, 0)
 
 	for rows.Next() {
 		var rawSchema string
@@ -37,21 +37,11 @@ func GetSchema(tableName string) ([]models.Schema, error) {
 		}
 
 		rawCols := SchemaRegex.FindAllStringSubmatch(rawSchema, -1) // the -1 means to return all substrings matched
-		for i, rawRow := range rawCols {
+		for _, rawRow := range rawCols {
 			sepIndex := strings.LastIndex(rawRow[0], " ")
 			name := strings.Trim(rawRow[0][:sepIndex], "\"")
 			colType := rawRow[0][sepIndex+1:]
-			var id string
-			switch colType {
-			case "INTEGER":
-				id = fmt.Sprintf("i%v", i)
-			case "REAL":
-				id = fmt.Sprintf("r%v", i)
-			case "TEXT":
-				id = fmt.Sprintf("t%v", i)
-
-			}
-			parsedCols = append(parsedCols, models.Schema{ColName: name, Type: colType, InputName: id})
+			parsedCols = append(parsedCols, models.Column{Name: name, TypeDB: colType})
 		}
 	}
 

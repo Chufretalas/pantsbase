@@ -94,7 +94,7 @@ func DeleteTable(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Tables(w http.ResponseWriter, r *http.Request) {
+func GetTables(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	onlyNames := r.URL.Query().Has("only_names")
@@ -110,16 +110,10 @@ func Tables(w http.ResponseWriter, r *http.Request) {
 		schema, err := db.GetSchema(name)
 		if err != nil {
 			fmt.Println(err)
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode([]any{})
+			http.Error(w, "failed to fetch the tables schemas", http.StatusInternalServerError)
 			return
 		}
-		columns := make([]models.Column, 0, len(schema))
-		columns = append(columns, models.Column{Name: "id", TypeDB: "INTEGER"})
-		for _, c := range schema {
-			columns = append(columns, models.Column{Name: c.ColName, TypeDB: c.Type})
-		}
-		resp = append(resp, models.TableResponse{TableName: name, Columns: columns})
+		resp = append(resp, models.TableResponse{TableName: name, Columns: schema})
 	}
 
 	w.WriteHeader(http.StatusOK)

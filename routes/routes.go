@@ -17,7 +17,7 @@ func LoadRoutes(router *http.ServeMux) {
 	router.HandleFunc("GET /table_view", controllers.TableView)
 	router.HandleFunc("POST /form_handlers/new_table", controllers.NewTable)
 
-	router.HandleFunc("GET /api/tables", controllers.Tables)
+	router.HandleFunc("GET /api/tables", controllers.GetTables)
 
 	router.HandleFunc("GET /api/tables/{table_name}", controllers.Query)
 	router.HandleFunc("GET /api/tables/{table_name}/{id}", controllers.QueryOne)
