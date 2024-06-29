@@ -10,7 +10,6 @@ import (
 	m "github.com/Chufretalas/pantsbase/models"
 )
 
-// TODO: disallow non-ASCII characters on table columns
 func NewTable(w http.ResponseWriter, r *http.Request) {
 	tableName := strings.Trim(r.FormValue("name"), " ")
 
