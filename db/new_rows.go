@@ -4,7 +4,6 @@ import (
 	"fmt"
 )
 
-// TODO: make this safer with ?'s to avoid SQL injections (args...)
 // TODO: return errors in more cases of an error happening here
 // inserts new data into the table and returns the ids of the new rows
 func NewRows(tableName string, rows []map[string]any) ([]int, error) {
@@ -19,7 +18,7 @@ func NewRows(tableName string, rows []map[string]any) ([]int, error) {
 
 	}
 
-	queryStr := fmt.Sprintf("INSERT INTO \"%v\" (", tableName)
+	queryStr := fmt.Sprintf(`INSERT INTO "%v" (`, tableName)
 	for idx, col := range cols {
 		if idx != len(cols)-1 {
 			queryStr += "\"" + col.Name + "\", "
@@ -27,6 +26,8 @@ func NewRows(tableName string, rows []map[string]any) ([]int, error) {
 			queryStr += "\"" + col.Name + "\")\n VALUES "
 		}
 	}
+
+	queryInputValues := make([]any, 0, len(rows)*len(cols))
 
 	for rowIdx, row := range rows {
 		queryStr += "("
@@ -38,15 +39,8 @@ func NewRows(tableName string, rows []map[string]any) ([]int, error) {
 
 			value = SanitizeValue(value, col.TypeDB)
 
-			if value == nil {
-				queryStr += "NULL"
-			} else {
-				if col.TypeDB == "TEXT" {
-					queryStr += fmt.Sprintf("'%v'", value)
-				} else {
-					queryStr += fmt.Sprintf("%v", value)
-				}
-			}
+			queryStr += "?"
+			queryInputValues = append(queryInputValues, value)
 
 			if idx != len(cols)-1 {
 				queryStr += ","
@@ -61,12 +55,15 @@ func NewRows(tableName string, rows []map[string]any) ([]int, error) {
 	}
 
 	fmt.Printf("queryStr: %v\n", queryStr)
+	fmt.Printf("queryInputValues: %v\n", queryInputValues)
 
 	var ids []int
-	returned_rows, err := DB.Query(queryStr)
+	returned_rows, err := DB.Query(queryStr, queryInputValues...)
 	if err != nil {
 		fmt.Println(err)
 	}
+	defer returned_rows.Close()
+
 	for returned_rows.Next() {
 		var id int
 		if err := returned_rows.Scan(&id); err != nil {

@@ -2,7 +2,6 @@ package db
 
 import "fmt"
 
-// TODO: make this safer with ?'s to avoid SQL injections (args...)
 func UpdateRow(tableName string, values map[string]any, rowId string) error {
 	cols, err := GetSchema(tableName)
 	if err != nil {
@@ -10,18 +9,16 @@ func UpdateRow(tableName string, values map[string]any, rowId string) error {
 		return err
 	}
 
+	queryInputValues := make([]any, 0, len(values))
+
 	queryStr := fmt.Sprintf("UPDATE %v \n SET ", "\""+tableName+"\"")
 	for idx, col := range cols {
+
 		value := SanitizeValue(values[col.Name], col.TypeDB)
-		if value == nil {
-			queryStr += fmt.Sprintf("\"%v\" = NULL", col.Name)
-		} else {
-			if col.TypeDB == "TEXT" {
-				queryStr += fmt.Sprintf("\"%v\" = '%v'", col.Name, value)
-			} else {
-				queryStr += fmt.Sprintf("\"%v\" = %v", col.Name, value)
-			}
-		}
+
+		queryStr += fmt.Sprintf(`"%v" = ?`, col.Name)
+		queryInputValues = append(queryInputValues, value)
+
 		if idx != len(cols)-1 {
 			queryStr += ",\n"
 		} else {
@@ -29,11 +26,13 @@ func UpdateRow(tableName string, values map[string]any, rowId string) error {
 		}
 	}
 
-	queryStr += fmt.Sprintf("WHERE id = %v;", rowId)
+	queryStr += "WHERE id = ?;"
+	queryInputValues = append(queryInputValues, rowId)
 
-	fmt.Println(queryStr)
+	fmt.Printf("queryStr: %v\n", queryStr)
+	fmt.Printf("queryInputValues: %v\n", queryInputValues)
 
-	_, err = DB.Exec(queryStr)
+	_, err = DB.Exec(queryStr, queryInputValues...)
 
 	if err != nil {
 		fmt.Println(err)

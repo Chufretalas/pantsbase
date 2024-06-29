@@ -7,6 +7,7 @@ func GetAllTableNames() []string {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+	defer selectAllTables.Close()
 
 	tables := make([]string, 0)
 

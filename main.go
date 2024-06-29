@@ -43,6 +43,8 @@ func init() {
 	routes.StaticFS = staticFS
 }
 
+//TODO: WRITE TESTS!!!!!!!!!
+
 func main() {
 
 	db.SchemaRegex = regexp.MustCompile(`(\"[A-z\s\d]+\"\s[A-z]+)`)

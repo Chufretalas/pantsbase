@@ -5,7 +5,6 @@ import (
 	"strconv"
 )
 
-// TODO: use this on update endpoints as well
 // avoids TEXTs on number fields putting nils in it's place
 func SanitizeValue(value any, col_type string) any {
 

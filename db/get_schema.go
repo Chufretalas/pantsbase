@@ -11,7 +11,6 @@ import (
 var SchemaRegex *regexp.Regexp
 
 func GetSchema(tableName string) ([]models.Column, error) {
-	// fmt.Println(tableName)
 
 	stmt, err := DB.Prepare("SELECT sql FROM sqlite_schema WHERE name = ?;")
 	if err != nil {

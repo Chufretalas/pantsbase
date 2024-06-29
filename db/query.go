@@ -42,17 +42,18 @@ func Query(tableName string, limit int, orderBy string, orderDirection string) (
 }
 
 func QueryOne(tableName string, id int) ([]map[string]any, error) {
-	queryString := fmt.Sprintf(`SELECT * FROM "%v" WHERE id="%v";`, tableName, id)
+	queryString := fmt.Sprintf(`SELECT * FROM "%v" WHERE id=?;`, tableName)
 
-	return queryAndReadData(queryString)
+	return queryAndReadData(queryString, id)
 }
 
-func queryAndReadData(queryString string) ([]map[string]any, error) {
-	rows, err := DB.Query(queryString)
+func queryAndReadData(queryString string, args ...any) ([]map[string]any, error) {
+	rows, err := DB.Query(queryString, args...)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
+	defer rows.Close()
 
 	columns, err := rows.Columns()
 	if err != nil {

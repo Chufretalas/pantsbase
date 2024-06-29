@@ -27,3 +27,5 @@ func LoadRoutes(router *http.ServeMux) {
 	router.HandleFunc("PATCH /api/tables/{table_name}/{id}", controllers.UpdateOne)
 	router.HandleFunc("DELETE /api/delete_table/{table_name}", controllers.DeleteTable)
 }
+
+//TODO: api create table

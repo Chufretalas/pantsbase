@@ -87,7 +87,7 @@ func DeleteTable(w http.ResponseWriter, r *http.Request) {
 
 	tableName := r.PathValue("table_name")
 
-	_, err := db.DB.Exec(fmt.Sprintf("DROP TABLE IF EXISTS \"%v\";", tableName))
+	_, err := db.DB.Exec(fmt.Sprintf(`DROP TABLE IF EXISTS "%v";`, tableName))
 
 	if err != nil {
 		log.Println(err)
@@ -198,4 +198,4 @@ func PostRows(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]any{"ids": ids})
 }
 
-// TODO: update many
+// TODO: update many?
