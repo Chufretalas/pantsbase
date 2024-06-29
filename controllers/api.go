@@ -13,6 +13,49 @@ import (
 	"github.com/Chufretalas/pantsbase/models"
 )
 
+// receives the columns in a json where the key is the column name and the value is the type
+func NewTable(w http.ResponseWriter, r *http.Request) {
+	tableName := r.PathValue("table_name")
+
+	decoder := json.NewDecoder(r.Body)
+	var body map[string]string
+	err := decoder.Decode(&body)
+	if err != nil {
+		fmt.Println("error decoding the body\n", err)
+		http.Error(w, "the body was not valid json", http.StatusBadRequest)
+		return
+	}
+
+	cols := make([]models.Column, 0, len(body))
+
+	for k, v := range body {
+		if v == "TEXT" || v == "REAL" || v == "INT" {
+			cols = append(cols, models.Column{Name: k, TypeDB: v})
+		} else {
+			http.Error(w, `column type must be "TEXT", "REAL" or "INT" and nothing else`, http.StatusBadRequest)
+			return
+		}
+	}
+
+	err = db.NewTable(tableName, cols)
+	if err != nil {
+		fmt.Println("error decoding the body\n", err)
+		http.Error(w, "something went wrong when creating th enew table", http.StatusInternalServerError)
+		return
+	}
+}
+
+func DeleteTable(w http.ResponseWriter, r *http.Request) {
+
+	tableName := r.PathValue("table_name")
+
+	_, err := db.DB.Exec(fmt.Sprintf(`DROP TABLE IF EXISTS "%v";`, tableName))
+
+	if err != nil {
+		log.Println(err)
+	}
+}
+
 func Query(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -81,17 +124,6 @@ func DeleteOne(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Could not delete the especified item.", http.StatusInternalServerError)
 	}
 
-}
-
-func DeleteTable(w http.ResponseWriter, r *http.Request) {
-
-	tableName := r.PathValue("table_name")
-
-	_, err := db.DB.Exec(fmt.Sprintf(`DROP TABLE IF EXISTS "%v";`, tableName))
-
-	if err != nil {
-		log.Println(err)
-	}
 }
 
 func GetTables(w http.ResponseWriter, r *http.Request) {

@@ -10,8 +10,8 @@ import (
 	m "github.com/Chufretalas/pantsbase/models"
 )
 
-func NewTable(w http.ResponseWriter, r *http.Request) {
-	tableName := strings.Trim(r.FormValue("name"), " ")
+func NewTableForm(w http.ResponseWriter, r *http.Request) {
+	tableName := r.FormValue("name")
 
 	var columnIndexes []string
 	if r.FormValue("column_indexes") == "" {
