@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -41,10 +42,19 @@ func Query(tableName string, limit int, orderBy string, orderDirection string) (
 	return queryAndReadData(queryString)
 }
 
-func QueryOne(tableName string, id int) ([]map[string]any, error) {
+func QueryOne(tableName string, id int) (map[string]any, error) {
 	queryString := fmt.Sprintf(`SELECT * FROM "%v" WHERE id=?;`, tableName)
 
-	return queryAndReadData(queryString, id)
+	res, err := queryAndReadData(queryString, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len(res) > 0 {
+		return res[0], nil
+	}
+	return nil, errors.New("no row with provided id was found")
 }
 
 func queryAndReadData(queryString string, args ...any) ([]map[string]any, error) {

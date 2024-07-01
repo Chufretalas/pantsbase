@@ -29,10 +29,10 @@ func NewTable(w http.ResponseWriter, r *http.Request) {
 	cols := make([]models.Column, 0, len(body))
 
 	for k, v := range body {
-		if v == "TEXT" || v == "REAL" || v == "INT" {
+		if v == "TEXT" || v == "REAL" || v == "INTEGER" {
 			cols = append(cols, models.Column{Name: k, TypeDB: v})
 		} else {
-			http.Error(w, `column type must be "TEXT", "REAL" or "INT" and nothing else`, http.StatusBadRequest)
+			http.Error(w, `column type must be "TEXT", "REAL" or "INTEGER" and nothing else`, http.StatusBadRequest)
 			return
 		}
 	}
@@ -56,6 +56,7 @@ func DeleteTable(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// TODO: accept ordering by id, it's kinda of the same thing as ordering by creation
 func Query(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -80,7 +81,7 @@ func Query(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("data: %v\n", data)
+	// fmt.Printf("data: %v\n", data)
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(data)
@@ -100,6 +101,10 @@ func QueryOne(w http.ResponseWriter, r *http.Request) {
 
 	data, err := db.QueryOne(tableName, id)
 	if err != nil {
+		if err.Error() == "no row with provided id was found" {
+			http.Error(w, fmt.Sprintf("no row for id = %v was found", id), http.StatusBadRequest)
+			return
+		}
 		fmt.Println(err)
 		http.Error(w, "could not retrieve the requested data", http.StatusInternalServerError)
 		return

@@ -54,8 +54,8 @@ func NewRows(tableName string, rows []map[string]any) ([]int, error) {
 		}
 	}
 
-	fmt.Printf("queryStr: %v\n", queryStr)
-	fmt.Printf("queryInputValues: %v\n", queryInputValues)
+	// fmt.Printf("queryStr: %v\n", queryStr)
+	// fmt.Printf("queryInputValues: %v\n", queryInputValues)
 
 	var ids []int
 	returned_rows, err := DB.Query(queryStr, queryInputValues...)
@@ -71,7 +71,7 @@ func NewRows(tableName string, rows []map[string]any) ([]int, error) {
 		}
 		ids = append(ids, id)
 	}
-	fmt.Println("IDs: ", ids)
+	// fmt.Println("IDs: ", ids)
 
 	return ids, nil
 }

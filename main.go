@@ -41,15 +41,14 @@ func init() {
 	}
 
 	routes.StaticFS = staticFS
+
+	db.SchemaRegex = regexp.MustCompile(`(\"[A-z\s\d]+\"\s[A-z]+)`)
 }
 
 //TODO: WRITE TESTS!!!!!!!!!
 
 func main() {
-
-	db.SchemaRegex = regexp.MustCompile(`(\"[A-z\s\d]+\"\s[A-z]+)`)
-
-	db.ConnectDB()
+	db.ConnectDB("./data.db")
 	defer db.DB.Close()
 
 	router := http.NewServeMux()
