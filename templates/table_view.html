@@ -150,11 +150,8 @@
     </body>
 
     <script>
-        //TODO: allow null values for empty fields?
-        const updateDialog = document.getElementById("update_dialog")
-
         const deleteTableButton = document.getElementById("delete_table_button")
-
+        
         deleteTableButton.addEventListener("click", async (e) => {
             e.preventDefault()
             if (confirm("Are you sure you want to delete table \"{{.TableName}}\"")) {
@@ -164,49 +161,6 @@
                 }
             }
         })
-
-        const schema = JSON.parse(document.getElementById("schema").value)
-        const tableName = document.getElementById("table_name").value
-
-        const newRowForm = document.getElementById("new_row_form")
-        const updateRowForm = document.getElementById("update_row_form")
-
-        async function submitRowHandler(e, newOrUpdate) {
-            e.preventDefault()
-            const rowObj = new Object()
-            const data = new FormData(e.target)
-            data.forEach((v, k) => {
-                console.log(k)
-                rowObj[schema.find(col => col.InputName === k).Name] = k[0] === "t" ? v : +v
-            })
-            console.log({ rowObj })
-
-            let updateId
-            if (newOrUpdate === "update") {
-                updateId = document.getElementById("update_row_id").value
-            }
-
-            if (rowObj) {
-                const url = newOrUpdate === "update" ? `/api/tables/${tableName}/${updateId}` : `/api/tables/${tableName}`
-                const resp = await fetch(url, {
-                    method: newOrUpdate === "update" ? "PUT" : "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(rowObj)
-                })
-                if (resp.status === 200) {
-                    if (newOrUpdate === "update") {
-                        updateDialog.close()
-                        //TODO: query back that one row that was updated, maybe with a returning id from the resp or simply the whole row returned
-                    }
-                    e.target.reset()
-                }
-            }
-        }
-
-        newRowForm.addEventListener("submit", (e) => submitRowHandler(e, "new"))
-        updateRowForm.addEventListener("submit", (e) => submitRowHandler(e, "update"))
     </script>
 
 </html>
