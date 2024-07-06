@@ -70,7 +70,7 @@ func Query(w http.ResponseWriter, r *http.Request) {
 	limit, err := strconv.Atoi(fmt.Sprintf("%v", limitStr))
 	if err != nil && limitStr != "" {
 		fmt.Println(err)
-		http.Error(w, `value for 'limit' was not a valid number`, http.StatusBadRequest)
+		http.Error(w, `value for 'limit' was not a valid integer`, http.StatusBadRequest)
 		return
 	}
 
